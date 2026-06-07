@@ -4,13 +4,16 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:prod": "serve dist/lms-project -s",
     "start:clean": "ng cache clean && ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:lms-project": "node dist/lms-project/server/server.mjs"
+    "test": "ng test"
   },
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "packageManager": "npm@11.8.0",
   "dependencies": {
     "@angular/cdk": "^21.2.13",
