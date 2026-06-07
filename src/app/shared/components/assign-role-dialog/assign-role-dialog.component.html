@@ -1,0 +1,40 @@
+@if (open()) {
+  <div class="dialog-backdrop" role="presentation" (click)="cancelled.emit()"></div>
+  <div class="dialog glass-panel" role="dialog" aria-labelledby="assign-role-title">
+    <h2 id="assign-role-title" class="dialog__title">Assign role</h2>
+    @if (user(); as selected) {
+      <p class="dialog__subtitle">
+        Assign an additional role to <strong>{{ selected.fullName }}</strong> ({{
+          selected.email
+        }}).
+      </p>
+      <p class="dialog__hint">Current role: {{ selected.role }}. Users can hold multiple roles.</p>
+    }
+
+    <app-page-alert [message]="apiError()" />
+
+    <form class="assign-role-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="roleName">Role to assign</label>
+        <select id="roleName" formControlName="roleName">
+          @for (role of roles; track role) {
+            <option [value]="roleValue(role)">{{ role }}</option>
+          }
+        </select>
+        @if (fieldError('roleName'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+        @if (fieldError('RoleName'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="dialog__actions">
+        <button type="button" class="btn btn--ghost" (click)="cancelled.emit()">Cancel</button>
+        <button type="submit" class="btn btn--primary" [disabled]="submitting()">
+          {{ submitting() ? 'Assigning...' : 'Assign role' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

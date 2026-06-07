@@ -1,0 +1,133 @@
+@import '../courses/courses-page.css';
+
+.enrollments-page__eyebrow,
+.enrollment-form-page__eyebrow,
+.enrollment-details-page__eyebrow {
+  margin: 0.75rem 0 0.35rem;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.enrollments-success {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgb(124 58 237 / 0.25);
+  background: var(--purple-50);
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+}
+
+.enrollment-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: flex-end;
+  margin-bottom: 1.25rem;
+}
+
+.enrollment-toolbar .search-field {
+  flex: 1 1 14rem;
+  min-width: 12rem;
+}
+
+.enrollment-toolbar .filter-field {
+  flex: 0 1 12rem;
+  min-width: 10rem;
+}
+
+.enrollment-table-wrap {
+  overflow-x: auto;
+}
+
+.enrollment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.enrollment-table th,
+.enrollment-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.enrollment-table th {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.enrollment-table__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.enrollment-details-card {
+  max-width: 36rem;
+  padding: 1.5rem;
+}
+
+.enrollment-details-card__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.enrollment-details-card__label {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.enrollment-details-card__value {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.enrollment-status-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.enrollment-status-form__actions,
+.enrollment-details-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.form-panel {
+  max-width: 40rem;
+  padding: 1.5rem;
+}
+
+.enrollment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.enrollment-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}

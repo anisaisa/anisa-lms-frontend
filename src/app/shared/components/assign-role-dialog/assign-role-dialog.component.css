@@ -1,0 +1,115 @@
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgb(30 27 46 / 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.dialog {
+  position: fixed;
+  z-index: 51;
+  top: 50%;
+  left: 50%;
+  width: min(92vw, 26rem);
+  padding: 1.5rem;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  background: #fff;
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  overflow: hidden;
+}
+
+.dialog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, var(--purple-400), var(--purple-700));
+  opacity: 0.75;
+}
+
+.dialog__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dialog__subtitle {
+  margin: 0 0 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dialog__hint {
+  margin: 0 0 1rem;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.assign-role-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.assign-role-form label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.assign-role-form select {
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+}
+
+.field__error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.8rem;
+}
+
+.btn {
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--purple-600), var(--purple-500));
+  color: #fff;
+  box-shadow: 0 4px 14px rgb(124 58 237 / 0.3);
+}
+
+.btn--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

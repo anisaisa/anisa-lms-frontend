@@ -1,0 +1,7 @@
+@import '../enrollments-page.css';
+
+.field__hint {
+  margin: 0.25rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}

@@ -1,0 +1,130 @@
+@import '../../courses/courses-page.css';
+
+.module-form-page {
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.module-form-page__header {
+  margin-bottom: 1.5rem;
+}
+
+.module-form-page__back {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0.85rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.module-form-page__back:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--purple-50);
+}
+
+.module-form-page__eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.module-form-page h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.module-form-page__course {
+  margin: 0 0 0.35rem;
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.module-form-page__subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.module-form-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.module-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.module-form__section {
+  padding: 1.5rem 1.5rem 0.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.module-form__section:last-of-type {
+  border-bottom: 0;
+}
+
+.module-form__section-title {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.field__hint {
+  margin: 0 0 0.4rem;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.field--compact input {
+  max-width: 8rem;
+}
+
+.module-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: var(--purple-50);
+  border-top: 1px solid var(--border);
+}
+
+.module-form__actions .btn--primary {
+  min-width: 9rem;
+}
+
+@media (min-width: 640px) {
+  .module-form-page {
+    max-width: 40rem;
+  }
+
+  .module-form__section {
+    padding: 1.75rem 1.75rem 0.5rem;
+  }
+
+  .module-form__actions {
+    padding: 1.35rem 1.75rem 1.75rem;
+  }
+}

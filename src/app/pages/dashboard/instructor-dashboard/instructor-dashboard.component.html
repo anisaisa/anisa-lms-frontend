@@ -1,0 +1,72 @@
+<div class="role-dashboard">
+  <div class="role-dashboard__kpis">
+    <app-dashboard-kpi-card
+      label="Students enrolled"
+      [value]="data().studentsEnrolled"
+      hint="Across all courses"
+    />
+    <app-dashboard-kpi-card
+      label="My courses"
+      [value]="data().myCourses.length"
+      hint="Courses you teach"
+    />
+    <app-dashboard-kpi-card
+      label="Upcoming assessments"
+      [value]="data().upcomingAssessments.length"
+    />
+  </div>
+
+  <div class="role-dashboard__charts">
+    <app-dashboard-chart-card
+      title="My courses"
+      type="bar"
+      [data]="coursesChartData()"
+      [options]="coursesChartOptions()"
+      [hasData]="hasCoursesChart()"
+      emptyMessage="No courses assigned yet."
+    />
+    <app-dashboard-chart-card
+      title="Students enrolled"
+      type="bar"
+      [data]="enrolledChartData()"
+      [options]="coursesChartOptions()"
+      [hasData]="data().studentsEnrolled > 0"
+      emptyMessage="No students enrolled yet."
+    />
+  </div>
+
+  <section class="dashboard-panel">
+    <h2>Upcoming assessments</h2>
+    @if (data().upcomingAssessments.length === 0) {
+      <p class="dashboard-panel__empty">No upcoming assessments on your courses.</p>
+    } @else {
+      <ul class="dashboard-assessment-list">
+        @for (assessment of data().upcomingAssessments; track assessment.id) {
+          <li class="dashboard-assessment-list__item glass-panel">
+            <div>
+              <strong>{{ assessment.title }}</strong>
+              <p>{{ assessment.courseTitle }}</p>
+              <p>Due {{ formatDueDate(assessment.dueDate) }}</p>
+            </div>
+            <a class="btn btn--ghost" routerLink="/assessments">View</a>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <div class="role-dashboard__tables">
+    <app-dashboard-course-table
+      title="My courses"
+      [courses]="data().myCourses"
+      [showCreatedAt]="true"
+      emptyMessage="You have not been assigned any courses yet."
+    />
+    <app-dashboard-course-table
+      title="Recent courses"
+      [courses]="data().recentCourses"
+      [showCreatedAt]="true"
+      emptyMessage="No recent course activity."
+    />
+  </div>
+</div>

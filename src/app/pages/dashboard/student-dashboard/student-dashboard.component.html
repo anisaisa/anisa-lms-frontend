@@ -1,0 +1,60 @@
+<div class="role-dashboard">
+  <div class="role-dashboard__kpis">
+    <app-dashboard-kpi-card
+      label="Completed assessments"
+      [value]="data().completedAssessments"
+    />
+    <app-dashboard-kpi-card label="Total enrollments" [value]="data().totalEnrollments" />
+    <app-dashboard-kpi-card label="Modules completed" [value]="data().modulesCompleted" />
+    <app-dashboard-kpi-card
+      label="Courses in progress"
+      [value]="data().coursesInProgress.length"
+    />
+  </div>
+
+  <div class="role-dashboard__charts">
+    <app-dashboard-chart-card
+      title="Completed modules %"
+      type="doughnut"
+      [data]="progressChartData()"
+      [options]="progressChartOptions()"
+      [loading]="progressLoading()"
+      [hasData]="hasProgressChart()"
+      emptyMessage="Enroll in a course to track module progress."
+    />
+    <app-dashboard-chart-card
+      title="Learning activity"
+      type="bar"
+      [data]="assessmentsChartData()"
+      [options]="assessmentsChartOptions()"
+      [hasData]="data().totalEnrollments > 0 || data().completedAssessments > 0"
+      emptyMessage="No learning activity yet."
+    />
+  </div>
+
+  <section class="dashboard-panel">
+    <h2>Progress summary</h2>
+    <app-course-progress-summary [stats]="aggregateStats()" [loading]="progressLoading()" />
+  </section>
+
+  <section class="dashboard-panel">
+    <h2>Courses in progress</h2>
+    @if (data().coursesInProgress.length === 0) {
+      <p class="dashboard-panel__empty">
+        You have no active course enrollments. Dropped or completed courses are not listed here.
+        <a routerLink="/courses">Browse courses</a>
+      </p>
+    } @else {
+      <ul class="dashboard-course-links">
+        @for (course of data().coursesInProgress; track course.id) {
+          <li>
+            <a class="dashboard-course-links__item glass-panel" [routerLink]="['/courses', course.id]">
+              <span>{{ course.title }}</span>
+              <span class="dashboard-course-links__cta">Continue learning →</span>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</div>

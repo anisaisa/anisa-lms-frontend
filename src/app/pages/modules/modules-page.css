@@ -1,0 +1,217 @@
+@import '../courses/courses-page.css';
+
+.course-success {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgb(124 58 237 / 0.25);
+  background: var(--purple-50);
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.module-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.1rem;
+  min-height: 100%;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.module-card:not(.module-card--locked):hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.module-card--locked {
+  opacity: 0.72;
+  cursor: not-allowed;
+  background: var(--purple-50);
+}
+
+.module-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.module-card__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--purple-100);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.module-card__icon {
+  display: inline-flex;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--primary);
+}
+
+.module-card--locked .module-card__icon {
+  color: var(--text-dim);
+}
+
+.module-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.module-card__hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.module-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.module-card__actions .btn {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+.module-card--open {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.module-card__open {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 1.1rem;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    transform var(--transition);
+}
+
+.module-card__open:hover {
+  background: var(--purple-50);
+}
+
+.module-card__progress-form {
+  padding: 0 1.1rem 0.35rem;
+}
+
+.module-card__progress {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.module-card__progress--done {
+  color: var(--primary);
+}
+
+.module-card__progress--pending {
+  color: var(--text-dim);
+}
+
+.progress-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.progress-badge--complete {
+  border: 1px solid rgb(124 58 237 / 0.35);
+  background: var(--purple-50);
+  color: var(--primary-dark);
+}
+
+.progress-badge--active {
+  border: 1px solid rgb(124 58 237 / 0.2);
+  background: var(--purple-50);
+  color: var(--primary);
+}
+
+.module-detail {
+  max-width: 48rem;
+  padding: 1.75rem;
+}
+
+.module-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.module-detail__content {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge--unlocked {
+  border: 1px solid rgb(124 58 237 / 0.25);
+  background: var(--purple-50);
+  color: var(--primary);
+}
+
+.badge--locked {
+  border: 1px solid var(--border);
+  background: var(--purple-50);
+  color: var(--text-dim);
+}

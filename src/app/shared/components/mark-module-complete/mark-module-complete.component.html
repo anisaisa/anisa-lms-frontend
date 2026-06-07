@@ -1,0 +1,28 @@
+@if (!isLocked() && !progress()?.isCompleted) {
+  <form
+    class="mark-progress"
+    [class.mark-progress--compact]="compact()"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+    <app-page-alert [message]="apiError()" />
+
+    <label class="mark-progress__check">
+      <input type="checkbox" formControlName="isCompleted" />
+      <span>I have completed this module</span>
+    </label>
+
+    <button class="btn btn--primary" type="submit" [disabled]="submitting() || form.disabled">
+      {{ submitting() ? 'Saving...' : 'Mark as completed' }}
+    </button>
+  </form>
+} @else if (progress()?.isCompleted) {
+  <div class="mark-progress mark-progress--done" [class.mark-progress--compact]="compact()">
+    <span class="progress-badge progress-badge--complete">Completed</span>
+    @if (completionLabel(); as completedOn) {
+      <p class="mark-progress__date">Completed on {{ completedOn }}</p>
+    }
+  </div>
+} @else if (isLocked()) {
+  <p class="mark-progress__locked">Complete the previous module to unlock progress tracking.</p>
+}

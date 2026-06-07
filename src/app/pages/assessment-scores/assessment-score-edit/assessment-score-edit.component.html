@@ -1,0 +1,82 @@
+<div class="assessment-score-edit-page">
+  <header class="page-header">
+    <div>
+      <a class="btn btn--ghost" routerLink="/assessment-scores">← Back to scores</a>
+      <p class="assessment-score-edit-page__eyebrow">Assessment scores</p>
+      <h1>Edit assessment score</h1>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading score..." />
+  } @else if (!scoreFound()) {
+    <div class="empty-state glass-panel">
+      <h2>Score not found</h2>
+      <p>Open a score from the assessment scores list to edit it.</p>
+      <a class="btn btn--primary" routerLink="/assessment-scores">Back to scores</a>
+    </div>
+  } @else if (score(); as item) {
+    <section class="assessment-score-details-card glass-panel">
+      <div class="assessment-score-details-card__row">
+        <div>
+          <p class="assessment-score-details-card__label">Student</p>
+          <p class="assessment-score-details-card__value">
+            {{ item.studentFullName || 'Unknown student' }}
+          </p>
+        </div>
+        <div>
+          <p class="assessment-score-details-card__label">Assessment</p>
+          <p class="assessment-score-details-card__value">{{ item.assessmentTitle }}</p>
+        </div>
+      </div>
+
+      <div class="assessment-score-details-card__row">
+        <div>
+          <p class="assessment-score-details-card__label">Course</p>
+          <p class="assessment-score-details-card__value">{{ item.courseTitle }}</p>
+        </div>
+        <div>
+          <p class="assessment-score-details-card__label">Current score</p>
+          <p class="assessment-score-details-card__value">{{ item.score }}</p>
+        </div>
+      </div>
+
+      <form
+        class="assessment-score-edit-form"
+        [formGroup]="scoreForm"
+        (ngSubmit)="submitScoreUpdate()"
+      >
+        <h2>Update score</h2>
+        <div class="field">
+          <label for="score">Score</label>
+          <input id="score" type="number" min="0" step="1" formControlName="score" />
+          @if (fieldError('score'); as error) {
+            <p class="field__error">{{ error }}</p>
+          }
+        </div>
+        <div class="assessment-score-edit-form__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="updating()">
+            {{ updating() ? 'Saving...' : 'Save score' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="assessment-score-details-card__footer">
+        <button type="button" class="btn btn--danger" (click)="openDeleteDialog()">
+          Delete score
+        </button>
+      </div>
+    </section>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete assessment score"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>

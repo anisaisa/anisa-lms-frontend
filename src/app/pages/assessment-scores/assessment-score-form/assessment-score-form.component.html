@@ -1,0 +1,77 @@
+<div class="assessment-score-form-page">
+  <header class="page-header">
+    <div>
+      <a class="btn btn--ghost" routerLink="/assessment-scores">← Back to scores</a>
+      <p class="assessment-score-form-page__eyebrow">Assessment scores</p>
+      <h1>{{ heading() }}</h1>
+      @if (subtitle()) {
+        <p class="page-header__subtitle">{{ subtitle() }}</p>
+      }
+    </div>
+  </header>
+
+  <section class="form-panel glass-panel">
+    <app-page-alert [message]="apiError()" />
+
+    <form class="assessment-score-form" [formGroup]="form()" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="studentId">Student</label>
+        @if (loadingStudents()) {
+          <p class="field__hint">Loading students...</p>
+        } @else if (students().length === 0) {
+          <p class="field__hint">
+            No students available.
+            <a routerLink="/register">Register a student account</a>
+            (Sign up assigns the Student role automatically).
+          </p>
+        } @else {
+          <select id="studentId" formControlName="studentId">
+            <option value="" disabled>Select a student</option>
+            @for (student of students(); track student.id) {
+              <option [value]="student.id">{{ student.fullName }} ({{ student.email }})</option>
+            }
+          </select>
+        }
+        @if (fieldError('studentId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="assessmentId">Assessment</label>
+        @if (loadingAssessments()) {
+          <p class="field__hint">Loading assessments...</p>
+        } @else if (assessments().length === 0) {
+          <p class="field__hint">No assessments available. Create an assessment on a course first.</p>
+        } @else {
+          <select id="assessmentId" formControlName="assessmentId">
+            <option [value]="0" disabled>Select an assessment</option>
+            @for (assessment of assessments(); track assessment.id) {
+              <option [value]="assessment.id">
+                {{ assessment.title }} ({{ assessment.courseTitle }})
+              </option>
+            }
+          </select>
+        }
+        @if (fieldError('assessmentId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="score">Score</label>
+        <input id="score" type="number" min="0" step="1" formControlName="score" />
+        @if (fieldError('score'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="assessment-score-form__actions">
+        <button class="btn btn--primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : submitLabel() }}
+        </button>
+        <a class="btn btn--ghost" routerLink="/assessment-scores">Cancel</a>
+      </div>
+    </form>
+  </section>
+</div>

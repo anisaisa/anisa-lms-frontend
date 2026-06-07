@@ -1,0 +1,129 @@
+<div class="assessments-page">
+  <header class="page-header">
+    <div>
+      <p class="assessments-page__eyebrow">Learning</p>
+      <h1>Assessments</h1>
+      <p class="page-header__subtitle">
+        @if (isStudent()) {
+          Assessments for courses where your enrollment is active.
+        } @else {
+          View deadlines, requirements, and student results by course.
+        }
+      </p>
+    </div>
+    @if (canManage()) {
+      <div class="page-actions">
+        <a class="btn btn--primary" routerLink="/assessments/new">+ Create assessment</a>
+      </div>
+    }
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading assessments..." />
+  } @else if (allAssessments().length === 0) {
+    @if (isStudent()) {
+      <app-empty-state
+        title="No assessments available"
+        message="You only see assessments for courses with an active enrollment. Contact your instructor if your status was changed to dropped or completed."
+      >
+        <a class="btn btn--primary" routerLink="/courses">Browse courses</a>
+      </app-empty-state>
+    } @else {
+      <app-empty-state
+        title="No assessments available"
+        message="Assessments will appear here once they are added to courses."
+      >
+        @if (canManage()) {
+          <a class="btn btn--primary" routerLink="/assessments/new">Create assessment</a>
+        }
+      </app-empty-state>
+    }
+  } @else {
+    @if (upcomingAssessments().length > 0) {
+      <section class="assessments-section">
+        <h2>Upcoming assessments</h2>
+        <div class="assessment-card-grid">
+          @for (assessment of upcomingAssessments(); track assessment.id) {
+            <article class="assessment-card assessment-card--upcoming glass-panel">
+              <span class="assessment-card__badge assessment-card__badge--upcoming">Upcoming</span>
+              <h3 class="assessment-card__title">{{ assessment.title }}</h3>
+              <p class="assessment-card__meta">{{ assessment.courseTitle }}</p>
+              <p class="assessment-card__meta">Due {{ formatDueDate(assessment) }}</p>
+              <p class="assessment-card__meta">
+                Max {{ assessment.maxPoints }} pts · Pass {{ assessment.passRequirement }} pts
+              </p>
+              @if (canManage()) {
+                <div class="assessment-card__actions">
+                  <button type="button" class="btn btn--ghost" (click)="viewResults(assessment, $event)">
+                    Results
+                  </button>
+                  <button type="button" class="btn btn--ghost" (click)="editAssessment(assessment, $event)">
+                    Edit
+                  </button>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </section>
+    }
+
+    <section class="assessments-section">
+      <h2>All assessments by course</h2>
+      @for (group of courseGroups(); track trackGroup($index, group)) {
+        <div class="course-assessment-group">
+          <h3>{{ group.courseTitle }}</h3>
+          <div class="assessment-card-grid">
+            @for (assessment of group.assessments; track assessment.id) {
+              <article
+                class="assessment-card glass-panel"
+                [class.assessment-card--overdue]="isOverdue(assessment)"
+                [class.assessment-card--upcoming]="!isOverdue(assessment)"
+              >
+                @if (isOverdue(assessment)) {
+                  <span class="assessment-card__badge assessment-card__badge--overdue">Overdue</span>
+                } @else {
+                  <span class="assessment-card__badge assessment-card__badge--upcoming">Active</span>
+                }
+                <h3 class="assessment-card__title">{{ assessment.title }}</h3>
+                <p class="assessment-card__meta">Due {{ formatDueDate(assessment) }}</p>
+                <p class="assessment-card__meta">
+                  Max {{ assessment.maxPoints }} pts · Pass {{ assessment.passRequirement }} pts
+                </p>
+                @if (canManage()) {
+                  <div class="assessment-card__actions">
+                    <button type="button" class="btn btn--ghost" (click)="viewResults(assessment, $event)">
+                      Results
+                    </button>
+                    <button type="button" class="btn btn--ghost" (click)="editAssessment(assessment, $event)">
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn--danger"
+                      (click)="openDeleteDialog(assessment, $event)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        </div>
+      }
+    </section>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete assessment"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  cancelLabel="Cancel"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>

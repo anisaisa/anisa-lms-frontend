@@ -1,0 +1,73 @@
+<div class="module-form-page">
+  <header class="module-form-page__header">
+    <a class="module-form-page__back" [routerLink]="['/courses', courseId()]">
+      ← Back to course
+    </a>
+    <p class="module-form-page__eyebrow">{{ mode() === 'create' ? 'New module' : 'Edit module' }}</p>
+    <h1>{{ heading() }}</h1>
+    @if (courseTitle()) {
+      <p class="module-form-page__course">{{ courseTitle() }}</p>
+    }
+    @if (subtitle()) {
+      <p class="module-form-page__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <section class="module-form-card glass-panel">
+    <app-page-alert [message]="apiError()" />
+
+    <form class="module-form" [formGroup]="form()" (ngSubmit)="onSubmit()">
+      <div class="module-form__section">
+        <h2 class="module-form__section-title">Basic information</h2>
+
+        <div class="field">
+          <label for="title">Module title</label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="e.g. Introduction to Angular"
+          />
+          @if (fieldError('title'); as error) {
+            <p class="field__error">{{ error }}</p>
+          }
+        </div>
+
+        <div class="field field--compact">
+          <label for="orderIndex">Display order</label>
+          <p class="field__hint">
+            Controls the sequence students see. Use 0 for the first module, then 1, 2, and so on.
+          </p>
+          <input id="orderIndex" type="number" min="0" formControlName="orderIndex" />
+          @if (fieldError('orderIndex'); as error) {
+            <p class="field__error">{{ error }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="module-form__section">
+        <h2 class="module-form__section-title">Lesson content</h2>
+
+        <div class="field">
+          <label for="content">Content</label>
+          <textarea
+            id="content"
+            formControlName="content"
+            rows="12"
+            placeholder="Write the module lesson text, instructions, or resources here..."
+          ></textarea>
+          @if (fieldError('content'); as error) {
+            <p class="field__error">{{ error }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="module-form__actions">
+        <button class="btn btn--primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : submitLabel() }}
+        </button>
+        <a class="btn btn--ghost" [routerLink]="['/courses', courseId()]">Cancel</a>
+      </div>
+    </form>
+  </section>
+</div>

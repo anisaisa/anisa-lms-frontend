@@ -1,0 +1,115 @@
+<div class="users-page">
+  <header class="page-header">
+    <div>
+      <p class="users-page__eyebrow">User management</p>
+      <h1>Users</h1>
+      <p class="page-header__subtitle">
+        @if (canAssignRole()) {
+          View accounts and assign roles.
+        } @else {
+          View accounts in the system. Role assignment is limited to admins.
+        }
+      </p>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  <div class="user-toolbar">
+    <div class="search-field">
+      <label class="search-field__label" for="user-name-search">Search by name</label>
+      <input
+        id="user-name-search"
+        type="search"
+        [formControl]="nameSearchControl"
+        placeholder="Full name..."
+      />
+    </div>
+    <div class="search-field">
+      <label class="search-field__label" for="user-email-search">Search by email</label>
+      <input
+        id="user-email-search"
+        type="search"
+        [formControl]="emailSearchControl"
+        placeholder="Email address..."
+      />
+    </div>
+    <div class="filter-field field">
+      <label for="user-role-filter">Role</label>
+      <select id="user-role-filter" [formControl]="roleFilterControl">
+        <option value="all">All roles</option>
+        @for (role of roles; track role) {
+          <option [value]="roleFilterValue(role)">{{ role }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading users..." />
+  } @else if (allUsers().length === 0) {
+    <div class="empty-state glass-panel">
+      <h2>No users found</h2>
+      <p>Registered accounts will appear here.</p>
+    </div>
+  } @else if (filteredUsers().length === 0) {
+    <div class="empty-state glass-panel">
+      <h2>No matching users</h2>
+      <p>Try different search or filter options.</p>
+    </div>
+  } @else {
+    <div class="user-table-wrap glass-panel">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Full name</th>
+            <th>Email</th>
+            <th>Current role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of filteredUsers(); track user.id) {
+            <tr>
+              <td>
+                <button type="button" class="user-table__link" (click)="viewUser(user)">
+                  {{ user.fullName }}
+                </button>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <app-user-role-badge [role]="user.role" />
+              </td>
+              <td>
+                <div class="user-table__actions">
+                  <button type="button" class="btn btn--secondary" (click)="viewUser(user)">
+                    View
+                  </button>
+                  @if (canAssignRole()) {
+                    <button
+                      type="button"
+                      class="btn btn--primary"
+                      (click)="openAssignDialog(user, $event)"
+                    >
+                      Assign role
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<app-assign-role-dialog
+  [open]="assignDialogOpen()"
+  [user]="userToAssign()"
+  [submitting]="assigning()"
+  [apiError]="assignDialogError()"
+  [fieldErrors]="assignFieldErrors()"
+  (confirmed)="confirmAssignRole($event)"
+  (cancelled)="closeAssignDialog()"
+/>

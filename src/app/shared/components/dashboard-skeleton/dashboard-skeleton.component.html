@@ -1,0 +1,15 @@
+<div class="dashboard-skeleton" aria-hidden="true" aria-busy="true">
+  <div class="dashboard-skeleton__kpis">
+    @for (i of kpiPlaceholders(); track i) {
+      <div class="dashboard-skeleton__kpi shimmer"></div>
+    }
+  </div>
+  @if (showTable()) {
+    <div class="dashboard-skeleton__table glass-panel">
+      <div class="dashboard-skeleton__row shimmer"></div>
+      <div class="dashboard-skeleton__row shimmer"></div>
+      <div class="dashboard-skeleton__row shimmer"></div>
+      <div class="dashboard-skeleton__row shimmer"></div>
+    </div>
+  }
+</div>

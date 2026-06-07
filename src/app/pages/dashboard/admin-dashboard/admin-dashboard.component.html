@@ -1,0 +1,77 @@
+<div class="role-dashboard">
+  <div class="role-dashboard__kpis">
+    <app-dashboard-kpi-card
+      label="Total users"
+      [value]="data().totalUsers"
+      link="/users"
+      hint="Open user management"
+    />
+    <app-dashboard-kpi-card label="Total courses" [value]="data().totalCourses" link="/courses" />
+  </div>
+
+  <div class="role-dashboard__charts role-dashboard__charts--triple">
+    <app-dashboard-chart-card
+      title="Courses by enrollment"
+      type="bar"
+      [data]="coursesChartData()"
+      [options]="coursesChartOptions()"
+      [hasData]="hasCoursesChart()"
+      emptyMessage="No course enrollment data yet."
+    />
+    <app-dashboard-chart-card
+      title="Students by role"
+      type="pie"
+      [data]="usersChartData()"
+      [options]="usersChartOptions()"
+      [loading]="loadingChartData()"
+      [hasData]="hasUsersChart()"
+      emptyMessage="No users to display."
+    />
+    <app-dashboard-chart-card
+      title="Enrollment status"
+      type="doughnut"
+      [data]="enrollmentChartData()"
+      [options]="enrollmentChartOptions()"
+      [loading]="loadingChartData()"
+      [hasData]="hasEnrollmentChart()"
+      emptyMessage="No enrollments yet."
+    />
+  </div>
+
+  <section class="dashboard-users-panel">
+    <h2>Users</h2>
+    @if (recentUsers().length === 0) {
+      <p class="dashboard-users-panel__empty glass-panel">No users in the system yet.</p>
+    } @else {
+      <ul class="dashboard-users-list">
+        @for (user of recentUsers(); track user.id) {
+          <li class="dashboard-users-list__item glass-panel">
+            <button type="button" class="dashboard-users-list__link" (click)="viewUser(user)">
+              {{ user.fullName }}
+            </button>
+            <app-user-role-badge [role]="user.role" />
+          </li>
+        }
+      </ul>
+    }
+    <p class="dashboard-users-panel__footer">
+      <a class="btn btn--ghost" routerLink="/users">View all users →</a>
+    </p>
+  </section>
+
+  <div class="role-dashboard__tables">
+    <app-dashboard-course-table
+      title="Popular courses"
+      [courses]="data().popularCourses"
+      [showEnrollments]="true"
+      [showCreatedAt]="false"
+      emptyMessage="No courses found."
+    />
+    <app-dashboard-course-table
+      title="Recent courses"
+      [courses]="data().recentCourses"
+      [showCreatedAt]="true"
+      emptyMessage="No courses found."
+    />
+  </div>
+</div>

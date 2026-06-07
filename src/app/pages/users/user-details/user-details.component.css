@@ -1,0 +1,15 @@
+@import '../users-page.css';
+
+.user-details-card__value--mono {
+  font-family: ui-monospace, monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+.user-details-card__readonly-hint {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+}

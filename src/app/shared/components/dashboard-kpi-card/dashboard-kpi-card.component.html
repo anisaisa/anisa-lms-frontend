@@ -1,0 +1,17 @@
+@if (link(); as href) {
+  <a class="kpi-card kpi-card--link glass-panel" [routerLink]="href">
+    <span class="kpi-card__label">{{ label() }}</span>
+    <strong class="kpi-card__value">{{ value() }}</strong>
+    @if (hint(); as hintText) {
+      <span class="kpi-card__hint">{{ hintText }}</span>
+    }
+  </a>
+} @else {
+  <article class="kpi-card glass-panel">
+    <span class="kpi-card__label">{{ label() }}</span>
+    <strong class="kpi-card__value">{{ value() }}</strong>
+    @if (hint(); as hintText) {
+      <span class="kpi-card__hint">{{ hintText }}</span>
+    }
+  </article>
+}

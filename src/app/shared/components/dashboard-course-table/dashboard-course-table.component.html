@@ -1,0 +1,44 @@
+<section class="dashboard-table-section">
+  <h2>{{ title() }}</h2>
+  @if (courses().length === 0) {
+    <p class="dashboard-table-section__empty">{{ emptyMessage() }}</p>
+  } @else {
+    <div class="dashboard-table-wrap glass-panel">
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Course</th>
+            @if (showEnrollments()) {
+              <th>Enrollments</th>
+            }
+            @if (showCreatedAt()) {
+              <th>Created</th>
+            }
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (course of courses(); track course.id) {
+            <tr>
+              <td>
+                <strong>{{ course.title }}</strong>
+                @if (course.description) {
+                  <p class="dashboard-table__desc">{{ course.description }}</p>
+                }
+              </td>
+              @if (showEnrollments()) {
+                <td>{{ course.enrollmentCount }}</td>
+              }
+              @if (showCreatedAt()) {
+                <td>{{ formatDate(course.createdAt) }}</td>
+              }
+              <td>
+                <a class="dashboard-table__link" [routerLink]="['/courses', course.id]">View</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

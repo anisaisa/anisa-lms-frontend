@@ -1,0 +1,112 @@
+.progress-summary {
+  margin-bottom: 1.5rem;
+}
+
+.progress-summary--compact .progress-summary__widgets {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.progress-summary__widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.progress-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+}
+
+.progress-widget__label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.progress-widget__value {
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.progress-widget--status {
+  justify-content: center;
+}
+
+.progress-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.progress-badge--complete {
+  border: 1px solid rgb(124 58 237 / 0.35);
+  background: var(--purple-50);
+  color: var(--primary-dark);
+}
+
+.progress-badge--active {
+  border: 1px solid rgb(124 58 237 / 0.2);
+  background: var(--purple-50);
+  color: var(--primary);
+}
+
+.progress-bar {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--purple-100);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--purple-700), var(--primary));
+  transition: width 0.35s ease;
+}
+
+.progress-summary__meta {
+  margin: 0.55rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.progress-summary__complete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgb(124 58 237 / 0.25);
+  background: var(--purple-50);
+  color: var(--primary-dark);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.progress-summary__loading,
+.progress-summary__empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 540px) {
+  .progress-summary__widgets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

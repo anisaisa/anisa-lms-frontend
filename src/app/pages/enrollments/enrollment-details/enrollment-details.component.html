@@ -1,0 +1,70 @@
+<div class="enrollment-details-page">
+  <header class="page-header">
+    <div>
+      <a class="btn btn--ghost" routerLink="/enrollments">← Back to enrollments</a>
+      <p class="enrollment-details-page__eyebrow">Enrollment</p>
+      <h1>Enrollment details</h1>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading enrollment..." />
+  } @else if (!enrollmentFound()) {
+    <div class="empty-state glass-panel">
+      <h2>Enrollment not found</h2>
+      <a class="btn btn--primary" routerLink="/enrollments">Back to enrollments</a>
+    </div>
+  } @else if (enrollment(); as item) {
+    <section class="enrollment-details-card glass-panel">
+      <div class="enrollment-details-card__row">
+        <div>
+          <p class="enrollment-details-card__label">Student</p>
+          <p class="enrollment-details-card__value">
+            {{ item.studentFullName || 'Unknown student' }}
+          </p>
+        </div>
+        <div>
+          <p class="enrollment-details-card__label">Current status</p>
+          <app-enrollment-status-badge [status]="item.status" />
+        </div>
+      </div>
+
+      <form class="enrollment-status-form" [formGroup]="statusForm" (ngSubmit)="submitStatusUpdate()">
+        <h2>Update status</h2>
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="statusValue(status)">{{ statusLabels[status] }}</option>
+            }
+          </select>
+          @if (fieldError('status'); as error) {
+            <p class="field__error">{{ error }}</p>
+          }
+        </div>
+        <div class="enrollment-status-form__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="updating()">
+            {{ updating() ? 'Saving...' : 'Save status' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="enrollment-details-card__footer">
+        <button type="button" class="btn btn--danger" (click)="openDeleteDialog()">
+          Delete enrollment
+        </button>
+      </div>
+    </section>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete enrollment"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>

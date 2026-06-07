@@ -1,0 +1,12 @@
+@import '../modules-page.css';
+
+.module-detail .btn--ghost {
+  display: inline-flex;
+  margin-bottom: 1rem;
+}
+
+.module-detail h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.03em;
+}

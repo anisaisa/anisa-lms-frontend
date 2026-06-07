@@ -1,0 +1,61 @@
+<div class="layout" [class.layout--nav-open]="navOpen()">
+  <header class="topbar">
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-label="Toggle navigation"
+      [attr.aria-expanded]="navOpen()"
+      (click)="toggleNav()"
+    >
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+    </button>
+
+    <a class="brand" routerLink="/dashboard" (click)="closeNav()">
+      <span class="brand__mark">L</span>
+      <span class="brand__text">LearnHub LMS</span>
+    </a>
+
+    @if (currentUser$ | async; as user) {
+      <div class="topbar__user">
+        <div class="topbar__user-meta">
+          <span class="topbar__user-name">{{ user.fullName }}</span>
+          <span class="topbar__user-role">{{ user.role }}</span>
+        </div>
+        <button type="button" class="btn-logout" (click)="logout()">Log out</button>
+      </div>
+    }
+  </header>
+
+  @if (navOpen()) {
+    <button
+      type="button"
+      class="backdrop"
+      aria-label="Close navigation"
+      (click)="closeNav()"
+    ></button>
+  }
+
+  <aside class="sidebar" aria-label="Main navigation">
+    <p class="sidebar__section">Main menu</p>
+    <nav class="sidebar__nav">
+      @for (item of navItems(); track item.path) {
+        <a
+          class="nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="nav-link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeNav()"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+
+</div>

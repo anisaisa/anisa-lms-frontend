@@ -1,0 +1,216 @@
+@import '../courses/courses-page.css';
+
+.assessment-form-page__eyebrow,
+.assessments-page__eyebrow {
+  margin: 0.75rem 0 0.35rem;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.form-panel {
+  max-width: 40rem;
+  padding: 1.5rem;
+}
+
+.assessment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.assessment-form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+}
+
+.assessment-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.field__readonly {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--purple-50);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.field__hint {
+  margin: 0.25rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+.assessments-success {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgb(124 58 237 / 0.25);
+  background: var(--purple-50);
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+}
+
+.assessments-section {
+  margin-bottom: 2rem;
+}
+
+.assessments-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.assessment-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.85rem;
+}
+
+.assessment-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.assessment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+  border-color: var(--border-strong);
+}
+
+.assessment-card--overdue {
+  border-color: rgb(248 113 113 / 0.45);
+  background: linear-gradient(165deg, #fff 0%, #fef2f2 100%);
+}
+
+.assessment-card--upcoming {
+  border-color: rgb(124 58 237 / 0.35);
+  background: linear-gradient(165deg, #fff 0%, var(--purple-50) 100%);
+}
+
+.assessment-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.assessment-card__meta {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.assessment-card__badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.assessment-card__badge--overdue {
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid rgb(248 113 113 / 0.35);
+}
+
+.assessment-card__badge--upcoming {
+  color: var(--primary-dark);
+  background: var(--purple-50);
+  border: 1px solid rgb(124 58 237 / 0.25);
+}
+
+.assessment-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+}
+
+.assessment-card__actions .btn {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+.course-assessment-group {
+  margin-bottom: 1.75rem;
+}
+
+.course-assessment-group h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.results-page__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.results-page__tabs .btn--tab-active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--purple-600), var(--purple-500));
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgb(124 58 237 / 0.35);
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results-table th,
+.results-table td {
+  padding: 0.75rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.results-table th {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.results-table-wrap {
+  overflow-x: auto;
+}
+
+.results-table__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .assessment-form__row {
+    grid-template-columns: 1fr;
+  }
+}

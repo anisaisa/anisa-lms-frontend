@@ -1,0 +1,77 @@
+<div class="enrollment-form-page">
+  <header class="page-header">
+    <div>
+      <a class="btn btn--ghost" routerLink="/enrollments">← Back to enrollments</a>
+      <p class="enrollment-form-page__eyebrow">Enrollment</p>
+      <h1>{{ heading() }}</h1>
+      @if (subtitle()) {
+        <p class="page-header__subtitle">{{ subtitle() }}</p>
+      }
+    </div>
+  </header>
+
+  <section class="form-panel glass-panel">
+    <app-page-alert [message]="apiError()" />
+
+    <form class="enrollment-form" [formGroup]="form()" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="courseId">Course</label>
+        @if (loadingCourses()) {
+          <p class="field__hint">Loading courses...</p>
+        } @else {
+          <select id="courseId" formControlName="courseId">
+            <option [value]="0" disabled>Select a course</option>
+            @for (course of courses(); track course.id) {
+              <option [value]="course.id">{{ course.title }}</option>
+            }
+          </select>
+        }
+        @if (fieldError('courseId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="studentId">Student</label>
+        @if (loadingStudents()) {
+          <p class="field__hint">Loading students...</p>
+        } @else if (students().length === 0) {
+          <p class="field__hint">
+            No students available.
+            <a routerLink="/register">Register a student account</a>
+            (Sign up assigns the Student role automatically).
+          </p>
+        } @else {
+          <select id="studentId" formControlName="studentId">
+            <option value="" disabled>Select a student</option>
+            @for (student of students(); track student.id) {
+              <option [value]="student.id">{{ student.fullName }} ({{ student.email }})</option>
+            }
+          </select>
+        }
+        @if (fieldError('studentId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status" formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="statusValue(status)">{{ statusLabels[status] }}</option>
+          }
+        </select>
+        @if (fieldError('status'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="enrollment-form__actions">
+        <button class="btn btn--primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : submitLabel() }}
+        </button>
+        <a class="btn btn--ghost" routerLink="/enrollments">Cancel</a>
+      </div>
+    </form>
+  </section>
+</div>

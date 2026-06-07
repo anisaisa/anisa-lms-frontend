@@ -1,0 +1,36 @@
+@import '../dashboard-page.css';
+
+.role-dashboard__charts {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .role-dashboard__charts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.dashboard-course-links {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard-course-links__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.dashboard-course-links__cta {
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}

@@ -1,0 +1,31 @@
+.welcome {
+  position: relative;
+  max-width: 44rem;
+  padding: 2.25rem 2rem;
+}
+
+.welcome__eyebrow {
+  position: relative;
+  margin: 0 0 0.6rem;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.welcome h1 {
+  position: relative;
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.75rem, 3.5vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.welcome__lead {
+  position: relative;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}

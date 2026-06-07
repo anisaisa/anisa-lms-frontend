@@ -1,0 +1,17 @@
+<section class="chart-card">
+  <h3 class="chart-card__title">{{ title() }}</h3>
+  @if (loading()) {
+    <p class="chart-card__empty">Loading chart...</p>
+  } @else if (!hasData()) {
+    <p class="chart-card__empty">{{ emptyMessage() }}</p>
+  } @else {
+    <div class="chart-card__canvas">
+      <canvas
+        baseChart
+        [type]="type()"
+        [data]="data()"
+        [options]="options()"
+      ></canvas>
+    </div>
+  }
+</section>

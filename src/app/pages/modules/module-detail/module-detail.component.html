@@ -1,0 +1,70 @@
+@if (loading()) {
+
+  <app-loading-spinner label="Loading module..." />
+
+} @else if (apiError(); as error) {
+
+  <app-page-alert [message]="error" />
+
+  <a class="btn btn--ghost" [routerLink]="['/courses', courseId]">Back to course</a>
+
+} @else if (module(); as mod) {
+
+  <article class="module-detail glass-panel">
+
+    <a class="btn btn--ghost" [routerLink]="['/courses', courseId]">← Back to modules</a>
+
+
+
+    <div class="module-detail__meta">
+
+      <span class="module-card__number">#{{ mod.orderIndex }}</span>
+
+      <span class="badge badge--unlocked">
+
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+          <rect x="5" y="11" width="14" height="10" rx="2" />
+
+          <path d="M8 11V8a4 4 0 0 1 7.5-2" />
+
+        </svg>
+
+        Unlocked
+
+      </span>
+
+      @if (canTrackProgress() && moduleProgress()?.isCompleted) {
+        <span class="progress-badge progress-badge--complete">Completed</span>
+      }
+
+    </div>
+
+
+
+    <h1>{{ mod.title }}</h1>
+
+    <p class="module-detail__content">{{ mod.content }}</p>
+
+
+
+    @if (canTrackProgress()) {
+      <app-mark-module-complete
+        [studentId]="studentId()"
+
+        [moduleId]="mod.id"
+
+        [isLocked]="mod.isLocked"
+
+        [progress]="moduleProgress()"
+
+        (progressChanged)="onProgressChanged()"
+
+      />
+
+    }
+
+  </article>
+
+}
+

@@ -1,0 +1,62 @@
+<div class="user-details-page">
+  <header class="page-header">
+    <div>
+      <a class="btn btn--ghost" routerLink="/users">← Back to users</a>
+      <p class="user-details-page__eyebrow">User management</p>
+      <h1>User details</h1>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading user..." />
+  } @else if (!userFound()) {
+    <div class="empty-state glass-panel">
+      <h2>User not found</h2>
+      <a class="btn btn--primary" routerLink="/users">Back to users</a>
+    </div>
+  } @else if (user(); as item) {
+    <section class="user-details-card glass-panel">
+      <div class="user-details-card__row">
+        <p class="user-details-card__label">Full name</p>
+        <p class="user-details-card__value">{{ item.fullName }}</p>
+      </div>
+      <div class="user-details-card__row">
+        <p class="user-details-card__label">Email</p>
+        <p class="user-details-card__value">{{ item.email }}</p>
+      </div>
+      <div class="user-details-card__row">
+        <p class="user-details-card__label">Current role</p>
+        <app-user-role-badge [role]="item.role" />
+      </div>
+      <div class="user-details-card__row">
+        <p class="user-details-card__label">User ID</p>
+        <p class="user-details-card__value user-details-card__value--mono">{{ item.id }}</p>
+      </div>
+
+      <div class="user-details-card__actions">
+        @if (canAssignRole()) {
+          <button type="button" class="btn btn--primary" (click)="openAssignDialog()">
+            Assign role
+          </button>
+        } @else {
+          <p class="user-details-card__readonly-hint">
+            Only admins can assign roles.
+          </p>
+        }
+        <a class="btn btn--ghost" routerLink="/users">Back to list</a>
+      </div>
+    </section>
+  }
+</div>
+
+<app-assign-role-dialog
+  [open]="assignDialogOpen()"
+  [user]="user()"
+  [submitting]="assigning()"
+  [apiError]="assignDialogError()"
+  [fieldErrors]="assignFieldErrors()"
+  (confirmed)="confirmAssignRole($event)"
+  (cancelled)="closeAssignDialog()"
+/>

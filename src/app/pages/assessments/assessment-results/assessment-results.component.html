@@ -1,0 +1,98 @@
+<div class="results-page">
+  <header class="page-header">
+    <div>
+      <a class="btn btn--ghost" routerLink="/assessments">← Back to assessments</a>
+      <p class="assessments-page__eyebrow">Results</p>
+      <h1>{{ assessment()?.title ?? 'Assessment results' }}</h1>
+      @if (assessment()) {
+        <p class="page-header__subtitle">
+          {{ assessment()!.courseTitle }} · Due {{ formatDueDate(assessment()!.dueDate) }} · Pass
+          {{ assessment()!.passRequirement }} / {{ assessment()!.maxPoints }} pts
+        </p>
+      }
+    </div>
+    <div class="page-actions">
+      <a
+        class="btn btn--primary"
+        [routerLink]="['/assessment-scores/new']"
+        [queryParams]="{ assessmentId: assessmentId }"
+      >
+        + Record score
+      </a>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  <p class="results-page__hint">
+    Students appear under <strong>Passed</strong> when score ≥ pass requirement, otherwise under
+    <strong>Failed</strong>.
+  </p>
+
+  <div class="results-page__tabs">
+    <button
+      type="button"
+      class="btn btn--ghost"
+      [class.btn--tab-active]="filterPassed()"
+      (click)="setFilter(true)"
+    >
+      Passed students
+    </button>
+    <button
+      type="button"
+      class="btn btn--ghost"
+      [class.btn--tab-active]="!filterPassed()"
+      (click)="setFilter(false)"
+    >
+      Failed students
+    </button>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading results..." />
+  } @else if (results().length === 0) {
+    <div class="empty-state glass-panel">
+      <h2>No {{ filterPassed() ? 'passed' : 'failed' }} students</h2>
+      <p>No scores match this filter yet.</p>
+    </div>
+  } @else {
+    <div class="results-table-wrap glass-panel">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Score</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of results(); track row.id) {
+            <tr>
+              <td>{{ row.studentFullName }}</td>
+              <td>{{ row.score }}</td>
+              <td>
+                <div class="results-table__actions">
+                  <button type="button" class="btn btn--ghost" (click)="editScore(row)">
+                    Edit
+                  </button>
+                  <button type="button" class="btn btn--danger" (click)="openDeleteDialog(row)">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete assessment score"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>

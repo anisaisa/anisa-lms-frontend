@@ -1,0 +1,48 @@
+<section
+  class="progress-summary"
+  [class.progress-summary--compact]="compact()"
+  aria-label="Course progress"
+>
+  @if (loading()) {
+    <p class="progress-summary__loading">Loading progress...</p>
+  } @else if (stats().totalModules === 0) {
+    <p class="progress-summary__empty">No modules to track yet.</p>
+  } @else {
+    <div class="progress-summary__widgets">
+      <div class="progress-widget glass-panel">
+        <span class="progress-widget__label">Progress</span>
+        <strong class="progress-widget__value">{{ stats().progressPercent }}%</strong>
+      </div>
+      <div class="progress-widget glass-panel">
+        <span class="progress-widget__label">Completed</span>
+        <strong class="progress-widget__value">{{ stats().completedModules }}</strong>
+      </div>
+      <div class="progress-widget glass-panel">
+        <span class="progress-widget__label">Remaining</span>
+        <strong class="progress-widget__value">{{ stats().remainingModules }}</strong>
+      </div>
+      <div class="progress-widget glass-panel progress-widget--status">
+        <span class="progress-widget__label">Course status</span>
+        @if (stats().isCourseCompleted) {
+          <span class="progress-badge progress-badge--complete">Completed</span>
+        } @else {
+          <span class="progress-badge progress-badge--active">In progress</span>
+        }
+      </div>
+    </div>
+
+    <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="stats().progressPercent" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-bar__fill" [style.width.%]="stats().progressPercent"></div>
+    </div>
+    <p class="progress-summary__meta">
+      {{ stats().completedModules }} of {{ stats().totalModules }} modules completed
+    </p>
+
+    @if (stats().isCourseCompleted) {
+      <p class="progress-summary__complete">
+        <span class="progress-badge progress-badge--complete">Course completed</span>
+        You have finished every module in this course.
+      </p>
+    }
+  }
+</section>

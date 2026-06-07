@@ -1,0 +1,341 @@
+<div class="course-details">
+
+  <header class="page-header">
+
+    <div>
+
+      <a class="btn btn--ghost" routerLink="/courses">← Back to courses</a>
+
+      <p class="course-details__eyebrow">Course details</p>
+
+      <h1>{{ course()?.title ?? 'Course' }}</h1>
+
+      @if (course()?.description) {
+
+        <p class="page-header__subtitle">{{ course()!.description }}</p>
+
+      }
+
+      @if (course()?.instructorFullName) {
+
+        <p class="page-header__subtitle">Instructor: {{ course()!.instructorFullName }}</p>
+
+      }
+
+    </div>
+
+    @if (canManageModules()) {
+
+      <div class="page-actions">
+
+        <a
+
+          class="btn btn--primary"
+
+          [routerLink]="['/courses', courseId, 'modules', 'new']"
+
+          [state]="{ nextOrderIndex: nextOrderIndex(), course: course() }"
+
+        >
+
+          + Add module
+
+        </a>
+
+      </div>
+
+    }
+
+  </header>
+
+
+
+  @if (successMessage(); as success) {
+
+    <p class="course-success">{{ success }}</p>
+
+  }
+
+  <app-page-alert [message]="apiError()" />
+
+  <app-page-alert [message]="enrollmentAccessMessage()" />
+
+
+
+  @if (showStudentLearning() && sortedModules().length > 0) {
+
+    <app-course-progress-summary
+
+      [stats]="progressStats()"
+
+      [loading]="progressLoading()"
+
+    />
+
+  }
+
+  @if (courseAssessments().length > 0) {
+    <section class="course-assessments assessments-section">
+      <div class="course-assessments__header">
+        <h2>Assessments</h2>
+        <a class="btn btn--ghost" routerLink="/assessments">View all assessments</a>
+      </div>
+      <div class="assessment-card-grid">
+        @for (assessment of courseAssessments(); track assessment.id) {
+          <article
+            class="assessment-card glass-panel"
+            [class.assessment-card--overdue]="assessmentIsOverdue(assessment)"
+          >
+            <h3 class="assessment-card__title">{{ assessment.title }}</h3>
+            <p class="assessment-card__meta">Due {{ formatAssessmentDue(assessment) }}</p>
+            <p class="assessment-card__meta">
+              Max {{ assessment.maxPoints }} pts · Pass {{ assessment.passRequirement }} pts
+            </p>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (loading()) {
+
+    <app-loading-spinner label="Loading modules..." />
+
+  } @else if (sortedModules().length === 0) {
+
+    <div class="empty-state glass-panel">
+
+      <h2>No modules yet</h2>
+
+      <p>Modules for this course will appear here.</p>
+
+      @if (canManageModules()) {
+
+        <a
+
+          class="btn btn--primary"
+
+          [routerLink]="['/courses', courseId, 'modules', 'new']"
+
+          [state]="{ nextOrderIndex: 0, course: course() }"
+
+        >
+
+          Create first module
+
+        </a>
+
+      }
+
+    </div>
+
+  } @else {
+
+    <div class="module-grid">
+
+      @for (module of sortedModules(); track module.id) {
+
+        @if (module.isLocked) {
+
+          <div class="module-card module-card--locked glass-panel" aria-disabled="true">
+
+            <div class="module-card__header">
+
+              <span class="module-card__number">#{{ moduleNumber(module) }}</span>
+
+              <span class="module-card__icon" aria-label="Locked" title="Locked">
+
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                  <rect x="5" y="11" width="14" height="10" rx="2" />
+
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+
+                </svg>
+
+              </span>
+
+            </div>
+
+            <h2 class="module-card__title">{{ module.title }}</h2>
+
+            <p class="module-card__hint">Complete the previous module to unlock.</p>
+
+            @if (showStudentLearning()) {
+              @if (moduleIsCompleted(module.id)) {
+                <p class="module-card__progress module-card__progress--done">Completed</p>
+              } @else {
+                <p class="module-card__progress module-card__progress--pending">Not started</p>
+              }
+            }
+
+            @if (canManageModules()) {
+
+              <div class="module-card__actions">
+
+                <button type="button" class="btn btn--ghost" (click)="editModule(module, $event)">
+
+                  Edit
+
+                </button>
+
+                <button
+
+                  type="button"
+
+                  class="btn btn--danger"
+
+                  (click)="openDeleteDialog(module, $event)"
+
+                >
+
+                  Delete
+
+                </button>
+
+              </div>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <article class="module-card module-card--open glass-panel">
+
+            <button
+
+              type="button"
+
+              class="module-card__open"
+
+              (click)="openModule(module)"
+
+              [attr.aria-label]="'Open module ' + module.title"
+
+            >
+
+              <div class="module-card__header">
+
+                <span class="module-card__number">#{{ moduleNumber(module) }}</span>
+
+                <span class="module-card__icon" aria-label="Unlocked" title="Unlocked">
+
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                    <rect x="5" y="11" width="14" height="10" rx="2" />
+
+                    <path d="M8 11V8a4 4 0 0 1 7.5-2" />
+
+                  </svg>
+
+                </span>
+
+              </div>
+
+              <h2 class="module-card__title">{{ module.title }}</h2>
+
+              <p class="module-card__hint">Tap to view module content.</p>
+
+              @if (canTrackProgress()) {
+                @if (moduleIsCompleted(module.id)) {
+                  <p class="module-card__progress module-card__progress--done">
+                    Completed
+                    @if (moduleCompletionLabel(module.id); as completedOn) {
+                      · {{ completedOn }}
+                    }
+                  </p>
+                } @else {
+                  <p class="module-card__progress module-card__progress--pending">In progress</p>
+                }
+              }
+            </button>
+
+
+
+            @if (showStudentLearning() && !moduleIsCompleted(module.id)) {
+
+              <div class="module-card__progress-form" (click)="stopCardClick($event)">
+
+                <app-mark-module-complete
+
+                  [studentId]="studentId()"
+
+                  [moduleId]="module.id"
+
+                  [isLocked]="module.isLocked"
+
+                  [progress]="moduleProgress(module.id) ?? null"
+
+                  [compact]="true"
+
+                  (progressChanged)="onProgressChanged()"
+
+                />
+
+              </div>
+
+            }
+
+
+
+            @if (canManageModules()) {
+
+              <div class="module-card__actions">
+
+                <button type="button" class="btn btn--ghost" (click)="editModule(module, $event)">
+
+                  Edit
+
+                </button>
+
+                <button
+
+                  type="button"
+
+                  class="btn btn--danger"
+
+                  (click)="openDeleteDialog(module, $event)"
+
+                >
+
+                  Delete
+
+                </button>
+
+              </div>
+
+            }
+
+          </article>
+
+        }
+
+      }
+
+    </div>
+
+  }
+
+</div>
+
+
+
+<app-confirm-dialog
+
+  [open]="deleteDialogOpen()"
+
+  title="Delete module"
+
+  [message]="deleteMessage()"
+
+  confirmLabel="Delete"
+
+  cancelLabel="Cancel"
+
+  (confirmed)="confirmDelete()"
+
+  (cancelled)="closeDeleteDialog()"
+
+/>
+

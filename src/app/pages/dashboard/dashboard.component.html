@@ -1,0 +1,48 @@
+@if (currentUser$ | async; as user) {
+  <section class="dashboard">
+    <header class="dashboard__header">
+      <p class="dashboard__eyebrow">Dashboard</p>
+      <h1>Welcome back, {{ user.fullName }}</h1>
+      <div class="dashboard__meta">
+        <span class="role-pill">{{ user.role }}</span>
+      </div>
+    </header>
+
+    <app-page-alert [message]="apiError()" />
+
+    @if (loading()) {
+      <app-dashboard-skeleton
+        [kpiCount]="roleForView(user.role) === UserRole.Admin ? 2 : 4"
+        [showTable]="true"
+      />
+    } @else if (apiError()) {
+      <div class="dashboard-placeholder glass-panel">
+        <p class="dashboard-placeholder__lead">Fix the issue above and refresh the page.</p>
+      </div>
+    } @else {
+      @switch (roleForView(user.role)) {
+        @case (UserRole.Admin) {
+          @if (adminData(); as data) {
+            <app-admin-dashboard [data]="data" />
+          }
+        }
+        @case (UserRole.Instructor) {
+          @if (instructorData(); as data) {
+            <app-instructor-dashboard [data]="data" />
+          }
+        }
+        @default {
+          @if (studentData(); as data) {
+            <app-student-dashboard [data]="data" />
+          }
+        }
+      }
+    }
+  </section>
+} @else {
+  <section class="dashboard-placeholder glass-panel">
+    <p class="dashboard__eyebrow">Dashboard</p>
+    <h1>Welcome back</h1>
+    <p class="dashboard-placeholder__lead">Loading your session...</p>
+  </section>
+}

@@ -1,0 +1,99 @@
+<div class="enrollments-page">
+  <header class="page-header">
+    <div>
+      <p class="enrollments-page__eyebrow">Enrollment management</p>
+      <h1>Enrollments</h1>
+      <p class="page-header__subtitle">Manage student course enrollments and status.</p>
+    </div>
+    <div class="page-actions">
+      <a class="btn btn--primary" routerLink="/enrollments/new">+ Enroll student</a>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  <div class="enrollment-toolbar">
+    <div class="search-field">
+      <label class="search-field__label" for="enrollment-search">Search by student name</label>
+      <input
+        id="enrollment-search"
+        type="search"
+        [formControl]="searchControl"
+        placeholder="Type to search..."
+      />
+    </div>
+    <div class="filter-field field">
+      <label for="enrollment-status-filter">Status</label>
+      <select id="enrollment-status-filter" [formControl]="statusFilterControl">
+        <option value="all">All statuses</option>
+        @for (status of statuses; track status) {
+          <option [value]="statusFilterValue(status)">{{ statusLabels[status] }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading enrollments..." />
+  } @else if (allEnrollments().length === 0) {
+    <div class="empty-state glass-panel">
+      <h2>No enrollments yet</h2>
+      <p>Enroll a student in a course to get started.</p>
+      <a class="btn btn--primary" routerLink="/enrollments/new">Enroll student</a>
+    </div>
+  } @else if (filteredEnrollments().length === 0) {
+    <div class="empty-state glass-panel">
+      <h2>No matching enrollments</h2>
+      <p>Try a different search or status filter.</p>
+    </div>
+  } @else {
+    <div class="enrollment-table-wrap glass-panel">
+      <table class="enrollment-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (enrollment of filteredEnrollments(); track enrollment.id) {
+            <tr>
+              <td>{{ enrollment.studentFullName || 'Unknown student' }}</td>
+              <td>
+                <app-enrollment-status-badge [status]="enrollment.status" />
+              </td>
+              <td>
+                <div class="enrollment-table__actions">
+                  <button
+                    type="button"
+                    class="btn btn--secondary"
+                    (click)="viewEnrollment(enrollment)"
+                  >
+                    View
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--danger"
+                    (click)="openDeleteDialog(enrollment, $event)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete enrollment"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>
