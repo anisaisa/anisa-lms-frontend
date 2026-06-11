@@ -14,14 +14,15 @@ export class ApiService {
   }
 
   post<T>(path: string, body: unknown): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}${path}`, body);
+    return this.http
+      .post(`${this.baseUrl}${path}`, body, { observe: 'response', responseType: 'text' })
+      .pipe(map((response) => this.parseResponseBody<T>(response.body, response.status)));
   }
 
   put<T>(path: string, body: unknown): Observable<T> {
-    // API returns 204 No Content — avoid JSON parse errors on empty body
     return this.http
       .put(`${this.baseUrl}${path}`, body, { observe: 'response', responseType: 'text' })
-      .pipe(map(() => undefined as T));
+      .pipe(map((response) => this.parseResponseBody<T>(response.body, response.status)));
   }
 
   patch<T>(path: string, body: unknown): Observable<T> {
@@ -29,10 +30,17 @@ export class ApiService {
   }
 
   delete<T>(path: string): Observable<T> {
-    // API returns 204 No Content — avoid JSON parse errors on empty body
     return this.http
       .delete(`${this.baseUrl}${path}`, { observe: 'response', responseType: 'text' })
-      .pipe(map(() => undefined as T));
+      .pipe(map((response) => this.parseResponseBody<T>(response.body, response.status)));
+  }
+
+  private parseResponseBody<T>(body: string | null, status: number): T {
+    if (status === 204 || !body?.trim()) {
+      return undefined as T;
+    }
+
+    return JSON.parse(body) as T;
   }
 
   private toHttpParams(

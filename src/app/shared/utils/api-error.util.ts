@@ -6,6 +6,9 @@ export interface ApiFieldErrors {
 
 export function getApiErrorMessage(error: unknown, fallback = 'Something went wrong.'): string {
   if (!(error instanceof HttpErrorResponse)) {
+    if (error instanceof Error && error.message.trim()) {
+      return error.message;
+    }
     return fallback;
   }
 
@@ -42,14 +45,33 @@ export function getApiErrorMessage(error: unknown, fallback = 'Something went wr
       typeof error.message === 'string' ? error.message.toLowerCase() : '';
 
     if (message.includes('failed to fetch') || message.includes('network')) {
-      return 'Cannot reach the API. Start the backend (https://localhost:7253), then restart ng serve with npm run start:clean.';
+      return 'Cannot reach the API. Check that the backend is online and CORS allows this site.';
     }
 
     return 'Unable to reach the server. Check that the API is running.';
   }
 
+  if (error.status === 200 || error.status === 204) {
+    const message =
+      typeof error.message === 'string' ? error.message.toLowerCase() : '';
+
+    if (message.includes('parsing') || message.includes('json')) {
+      return 'The server responded, but the response could not be read. Try again after refreshing the page.';
+    }
+  }
+
   if (error.status === 401) {
     return 'Invalid email or password.';
+  }
+
+  if (error.status === 409) {
+    if (body && typeof body === 'object') {
+      const conflict = body as Record<string, unknown>;
+      if (typeof conflict['message'] === 'string' && conflict['message']) {
+        return conflict['message'];
+      }
+    }
+    return 'This record already exists.';
   }
 
   if (error.status === 403) {

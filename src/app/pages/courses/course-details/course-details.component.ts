@@ -1,10 +1,10 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 
-import { catchError, forkJoin, map, of, throwError } from 'rxjs';
+import { catchError, filter, forkJoin, map, of, Subscription, throwError } from 'rxjs';
 import { finalize } from 'rxjs';
 
 
@@ -50,8 +50,6 @@ import {
 
 import {
 
-  applyModuleLockState,
-
   unlockAllModulesForStaff,
 
   computeCourseProgressStats,
@@ -96,11 +94,12 @@ import {
 
 })
 
-export class CourseDetailsComponent implements OnInit {
+export class CourseDetailsComponent implements OnInit, OnDestroy {
 
   private readonly route = inject(ActivatedRoute);
 
   private readonly router = inject(Router);
+  private routerSubscription?: Subscription;
 
   private readonly auth = inject(AuthService);
 
@@ -227,6 +226,23 @@ export class CourseDetailsComponent implements OnInit {
 
     this.loadData();
 
+    this.routerSubscription = this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        filter((event) => {
+          const coursePath = `/courses/${this.courseId}`;
+          return (
+            event.urlAfterRedirects.startsWith(coursePath) &&
+            !event.urlAfterRedirects.includes('/modules/')
+          );
+        }),
+      )
+      .subscribe(() => this.loadData());
+
+  }
+
+  ngOnDestroy(): void {
+    this.routerSubscription?.unsubscribe();
   }
 
 
@@ -324,10 +340,10 @@ export class CourseDetailsComponent implements OnInit {
 
         next: ({ modules, progress }) => {
           this.progressList.set(progress);
+          // Module lock flags come from the API (fresh DB progress). Do not re-apply
+          // client-side locks from cached GET /progress — that kept module 2 locked.
           this.modules.set(
-            trackProgress
-              ? applyModuleLockState(modules, progress)
-              : unlockAllModulesForStaff(modules),
+            trackProgress ? modules : unlockAllModulesForStaff(modules),
           );
         },
 

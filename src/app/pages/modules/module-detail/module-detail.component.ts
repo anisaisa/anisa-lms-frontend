@@ -35,15 +35,7 @@ import {
   isEnrollmentAccessDenied,
 } from '../../../shared/utils/api-error.util';
 
-import {
-
-  applyModuleLockState,
-
-  getProgressForModule,
-
-  unlockAllModulesForStaff,
-
-} from '../../../shared/utils/progress.util';
+import { getProgressForModule } from '../../../shared/utils/progress.util';
 
 
 
@@ -165,7 +157,7 @@ export class ModuleDetailComponent implements OnInit {
 
 
 
-    if (stateProgress) {
+    if (stateProgress !== undefined) {
 
       this.progressList.set(stateProgress);
 
@@ -177,35 +169,11 @@ export class ModuleDetailComponent implements OnInit {
 
       const trackProgress = this.canTrackProgress();
 
-      const progress = trackProgress ? (stateProgress ?? []) : [];
+      this.module.set(
+        trackProgress ? stateModule : { ...stateModule, isLocked: false },
+      );
 
-      const modulesForLocks = stateModules?.length ? stateModules : [stateModule];
-
-      const withLocks = trackProgress
-
-        ? applyModuleLockState(modulesForLocks, progress)
-
-        : unlockAllModulesForStaff(modulesForLocks);
-
-      const resolved = withLocks.find((m) => m.id === this.moduleId) ?? stateModule;
-
-
-
-      if (trackProgress && resolved.isLocked) {
-
-        this.redirectLocked();
-
-        return;
-
-      }
-
-
-
-      this.module.set(trackProgress ? resolved : { ...resolved, isLocked: false });
-
-
-
-      if (stateProgress || !trackProgress) {
+      if (!trackProgress) {
 
         this.loading.set(false);
 
@@ -307,13 +275,9 @@ export class ModuleDetailComponent implements OnInit {
 
           this.progressList.set(progress);
 
-          const withLocks = trackProgress
-
-            ? applyModuleLockState(modules, progress)
-
-            : unlockAllModulesForStaff(modules);
-
-          const found = withLocks.find((m) => m.id === this.moduleId);
+          const found = (trackProgress ? modules : modules.map((m) => ({ ...m, isLocked: false }))).find(
+            (m) => m.id === this.moduleId,
+          );
 
 
 

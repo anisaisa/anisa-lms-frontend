@@ -38,9 +38,9 @@ export class MarkModuleCompleteComponent implements OnChanges {
   ngOnChanges(): void {
     const entry = this.progress();
     this.form.patchValue({ isCompleted: entry?.isCompleted ?? false }, { emitEvent: false });
-    if (entry?.isCompleted) {
+    if (entry?.isCompleted || this.isLocked()) {
       this.form.disable({ emitEvent: false });
-    } else if (!this.isLocked()) {
+    } else {
       this.form.enable({ emitEvent: false });
     }
   }
@@ -63,14 +63,11 @@ export class MarkModuleCompleteComponent implements OnChanges {
     this.apiError.set(null);
     this.submitting.set(true);
 
-    const existing = this.progress();
-    const request$ = existing
-      ? this.progressService.updateProgress(existing.id, { isCompleted: true })
-      : this.progressService.createProgress({
-          studentId: this.studentId(),
-          moduleId: this.moduleId(),
-          isCompleted: true,
-        });
+    const request$ = this.progressService.createProgress({
+      studentId: this.studentId(),
+      moduleId: this.moduleId(),
+      isCompleted: true,
+    });
 
     request$.pipe(finalize(() => this.submitting.set(false))).subscribe({
       next: () => this.progressChanged.emit(),
