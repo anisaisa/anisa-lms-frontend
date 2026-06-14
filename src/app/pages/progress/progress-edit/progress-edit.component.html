@@ -1,0 +1,94 @@
+<div class="lms-section progress-edit-page">
+  <header class="lms-hero">
+    <div class="lms-hero__content">
+      <div>
+        <a class="btn btn--ghost" routerLink="/progress">← Back to progress</a>
+        <p class="lms-hero__eyebrow">Module progress</p>
+        <h1>Edit module progress</h1>
+        <p class="lms-hero__subtitle">Update completion status for a student module record.</p>
+      </div>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading progress record..." />
+  } @else if (!itemFound()) {
+    <div class="lms-panel">
+      <h2>Record not found</h2>
+      <p class="lms-panel__subtitle">Open a progress record from the module progress list to edit it.</p>
+      <a class="btn btn--primary" routerLink="/progress">Back to progress</a>
+    </div>
+  } @else if (item(); as record) {
+    <section class="progress-details-card">
+      <div class="progress-details-card__row">
+        <div>
+          <p class="progress-details-card__label">Student</p>
+          <p class="progress-details-card__value">{{ record.studentFullName }}</p>
+        </div>
+        <div>
+          <p class="progress-details-card__label">Course</p>
+          <p class="progress-details-card__value">{{ record.courseTitle }}</p>
+        </div>
+      </div>
+
+      <div class="progress-details-card__row">
+        <div>
+          <p class="progress-details-card__label">Module</p>
+          <p class="progress-details-card__value">{{ record.moduleTitle }}</p>
+        </div>
+        <div>
+          <p class="progress-details-card__label">Current status</p>
+          <p class="progress-details-card__value">
+            @if (record.isCompleted) {
+              <span class="progress-status-badge progress-status-badge--complete">
+                Completed on {{ formatCompletion(record.completionDate) }}
+              </span>
+            } @else {
+              <span class="progress-status-badge progress-status-badge--pending">Incomplete</span>
+            }
+          </p>
+        </div>
+      </div>
+
+      <form class="progress-edit-form" [formGroup]="progressForm" (ngSubmit)="submitUpdate()">
+        <h2>Update progress</h2>
+
+        <label class="mark-progress__check">
+          <input type="checkbox" formControlName="isCompleted" />
+          <span>Module is completed</span>
+        </label>
+
+        <div class="field">
+          <label for="completionDate">Completion date (optional)</label>
+          <input id="completionDate" type="datetime-local" formControlName="completionDate" />
+          @if (fieldError('completionDate'); as error) {
+            <p class="field__error">{{ error }}</p>
+          }
+        </div>
+
+        <div class="progress-edit-form__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="updating()">
+            {{ updating() ? 'Saving...' : 'Save changes' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="progress-details-card__footer">
+        <button type="button" class="btn btn--danger" (click)="openDeleteDialog()">
+          Delete progress
+        </button>
+      </div>
+    </section>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete module progress"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>

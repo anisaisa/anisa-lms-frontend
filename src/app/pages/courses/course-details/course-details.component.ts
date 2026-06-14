@@ -504,6 +504,16 @@ export class CourseDetailsComponent implements OnInit, OnDestroy {
 
 
 
+  protected detailsEyebrow(): string {
+    if (this.auth.hasRole(UserRole.Admin)) {
+      return 'Admin course view';
+    }
+    if (this.auth.hasRole(UserRole.Instructor)) {
+      return 'Instructor course view';
+    }
+    return 'Student learning path';
+  }
+
   protected moduleNumber(module: ModuleDto): number {
 
     return module.orderIndex;

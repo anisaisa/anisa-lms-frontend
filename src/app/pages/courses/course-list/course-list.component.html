@@ -1,29 +1,48 @@
-<div class="course-list">
-  <header class="page-header">
-    <div>
-      <p class="course-list__eyebrow">Course management</p>
-      <h1>Courses</h1>
-      <p class="page-header__subtitle">
-        Browse and manage learning courses
-        @if (currentUser$ | async; as user) {
-          <span> · signed in as {{ user.role }}</span>
-        }
-      </p>
+<div class="courses-surface course-list">
+  <header class="courses-hero">
+    <div class="courses-hero__content">
+      <div>
+        <p class="courses-hero__eyebrow">{{ coursesEyebrow() }}</p>
+        <h1>Courses</h1>
+        <p class="courses-hero__subtitle">{{ coursesSubtitle() }}</p>
+      </div>
+      @if (currentUser$ | async; as user) {
+        <div class="courses-hero__meta">
+          <span class="courses-role-pill">{{ user.role }}</span>
+        </div>
+      }
     </div>
   </header>
 
-  <div class="course-toolbar">
-    <div class="search-field">
-      <label class="search-field__label" for="course-search">Search by title</label>
+  @if (!loading() && courses().length > 0) {
+    <div class="courses-stats">
+      <article class="courses-stat">
+        <span class="courses-stat__label">Total courses</span>
+        <strong class="courses-stat__value">{{ totalCount() }}</strong>
+      </article>
+      <article class="courses-stat">
+        <span class="courses-stat__label">On this page</span>
+        <strong class="courses-stat__value">{{ courses().length }}</strong>
+      </article>
+      <article class="courses-stat">
+        <span class="courses-stat__label">Modules shown</span>
+        <strong class="courses-stat__value">{{ totalModulesOnPage() }}</strong>
+      </article>
+    </div>
+  }
+
+  <div class="courses-toolbar">
+    <div class="courses-search">
+      <label class="courses-search__label" for="course-search">Search by title</label>
       <input
         id="course-search"
         type="search"
         [formControl]="searchControl"
-        placeholder="Type to search..."
+        placeholder="Find a course..."
       />
     </div>
     @if (isAdmin()) {
-      <a class="btn btn--primary" routerLink="/courses/new">+ Create course</a>
+      <a class="btn btn--primary" routerLink="/courses/new">Create course</a>
     }
   </div>
 
@@ -41,57 +60,76 @@
       }
     </app-empty-state>
   } @else {
-    <div class="course-grid">
+    <div class="courses-grid">
       @for (course of courses(); track course.id) {
-        <article class="course-card glass-panel">
-          <div class="course-card__top">
-            <span class="course-card__status">{{ course.status }}</span>
+        <article class="courses-card">
+          <div class="courses-card__top">
+            <span
+              class="courses-card__status"
+              [class.courses-card__status--published]="isPublished(course)"
+              [class.courses-card__status--draft]="isDraft(course)"
+            >
+              {{ course.status }}
+            </span>
             @if (isAdmin()) {
-              <div class="course-card__actions">
+              <div class="courses-card__actions">
                 <button type="button" class="btn btn--ghost" (click)="editCourse(course, $event)">
                   Edit
                 </button>
-                <button
-                  type="button"
-                  class="btn btn--danger"
-                  (click)="openDeleteDialog(course)"
-                >
+                <button type="button" class="btn btn--danger" (click)="openDeleteDialog(course)">
                   Delete
                 </button>
               </div>
             }
           </div>
-          <button type="button" class="course-card__link" (click)="viewCourse(course)">
-            <h2 class="course-card__title">{{ course.title }}</h2>
+
+          <button type="button" class="courses-card__link" (click)="viewCourse(course)">
+            <h2 class="courses-card__title">{{ course.title }}</h2>
           </button>
-          <p class="course-card__description">
+
+          <p class="courses-card__description">
             {{ course.description || 'No description provided.' }}
           </p>
-          <div class="course-card__footer">
-            <button type="button" class="btn btn--secondary" (click)="viewCourse(course)">
-              View modules
-            </button>
+
+          <div class="courses-card__enrollment">
+            <div class="courses-card__enrollment-label">
+              <span>Enrollment capacity</span>
+              <span>{{ enrollmentCount(course) }} / {{ course.maxEnrollments }}</span>
+            </div>
+            <div class="courses-card__enrollment-bar" aria-hidden="true">
+              <div
+                class="courses-card__enrollment-fill"
+                [style.width.%]="enrollmentFillPercent(course)"
+              ></div>
+            </div>
           </div>
-          <dl class="course-card__meta">
-            <div>
-              <dt>Instructor</dt>
-              <dd>{{ course.instructorFullName || 'Unassigned' }}</dd>
+
+          <dl class="courses-card__meta">
+            <div class="courses-card__meta-item">
+              <dt class="courses-card__meta-label">Instructor</dt>
+              <dd class="courses-card__meta-value">{{ course.instructorFullName || 'Unassigned' }}</dd>
             </div>
-            <div>
-              <dt>Enrollments</dt>
-              <dd>{{ enrollmentCount(course) }} / {{ course.maxEnrollments }}</dd>
+            <div class="courses-card__meta-item">
+              <dt class="courses-card__meta-label">Modules</dt>
+              <dd class="courses-card__meta-value">{{ moduleCount(course) }}</dd>
             </div>
-            <div>
-              <dt>Modules</dt>
-              <dd>{{ course.modules.length }}</dd>
+            <div class="courses-card__meta-item">
+              <dt class="courses-card__meta-label">Assessments</dt>
+              <dd class="courses-card__meta-value">{{ assessmentCount(course) }}</dd>
             </div>
           </dl>
+
+          <div class="courses-card__footer">
+            <button type="button" class="btn btn--secondary" (click)="viewCourse(course)">
+              Open course
+            </button>
+          </div>
         </article>
       }
     </div>
 
     @if (totalPages() > 1) {
-      <nav class="pagination" aria-label="Course pagination">
+      <nav class="courses-pagination" aria-label="Course pagination">
         <button
           type="button"
           class="btn btn--ghost"
@@ -100,7 +138,7 @@
         >
           Previous
         </button>
-        <span class="pagination__info">
+        <span class="courses-pagination__info">
           Page {{ page() }} of {{ totalPages() }} ({{ totalCount() }} courses)
         </span>
         <button

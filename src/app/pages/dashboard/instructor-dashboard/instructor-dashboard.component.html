@@ -1,24 +1,61 @@
 <div class="role-dashboard">
+  <nav class="dashboard-quick-actions" aria-label="Quick actions">
+    <a class="dashboard-quick-actions__link" routerLink="/courses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+      My courses
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/assessments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6" />
+      </svg>
+      Assessments
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/enrollments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M16 3h5v5M8 3H3v5M21 3l-7 7M3 3l7 7" />
+      </svg>
+      Enrollments
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/progress">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+      Progress
+    </a>
+  </nav>
+
   <div class="role-dashboard__kpis">
     <app-dashboard-kpi-card
       label="Students enrolled"
       [value]="data().studentsEnrolled"
-      hint="Across all courses"
+      hint="Across all your courses"
+      icon="students"
+      accent="sky"
     />
     <app-dashboard-kpi-card
       label="My courses"
       [value]="data().myCourses.length"
       hint="Courses you teach"
+      icon="courses"
+      accent="indigo"
     />
     <app-dashboard-kpi-card
       label="Upcoming assessments"
       [value]="data().upcomingAssessments.length"
+      hint="Due soon on your courses"
+      icon="assessments"
+      accent="amber"
     />
   </div>
 
   <div class="role-dashboard__charts">
     <app-dashboard-chart-card
       title="My courses"
+      subtitle="Courses assigned to you"
       type="bar"
       [data]="coursesChartData()"
       [options]="coursesChartOptions()"
@@ -27,6 +64,7 @@
     />
     <app-dashboard-chart-card
       title="Students enrolled"
+      subtitle="Total learners in your classes"
       type="bar"
       [data]="enrolledChartData()"
       [options]="coursesChartOptions()"
@@ -36,19 +74,38 @@
   </div>
 
   <section class="dashboard-panel">
-    <h2>Upcoming assessments</h2>
+    <div class="dashboard-panel__header">
+      <div>
+        <h2 class="dashboard-panel__title">Upcoming assessments</h2>
+        <p class="dashboard-panel__subtitle">Deadlines across your teaching schedule</p>
+      </div>
+      <a class="btn btn--ghost" routerLink="/assessments">Manage</a>
+    </div>
     @if (data().upcomingAssessments.length === 0) {
       <p class="dashboard-panel__empty">No upcoming assessments on your courses.</p>
     } @else {
       <ul class="dashboard-assessment-list">
         @for (assessment of data().upcomingAssessments; track assessment.id) {
-          <li class="dashboard-assessment-list__item glass-panel">
-            <div>
-              <strong>{{ assessment.title }}</strong>
-              <p>{{ assessment.courseTitle }}</p>
-              <p>Due {{ formatDueDate(assessment.dueDate) }}</p>
-            </div>
-            <a class="btn btn--ghost" routerLink="/assessments">View</a>
+          <li>
+            <article class="dashboard-assessment-card">
+              <span class="dashboard-assessment-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6M16 13H8M16 17H8" />
+                </svg>
+              </span>
+              <div>
+                <p class="dashboard-assessment-card__title">{{ assessment.title }}</p>
+                <p class="dashboard-assessment-card__course">{{ assessment.courseTitle }}</p>
+                <span
+                  class="dashboard-assessment-card__due"
+                  [class.dashboard-assessment-card__due--soon]="isDueSoon(assessment.dueDate)"
+                >
+                  Due {{ formatDueDate(assessment.dueDate) }}
+                </span>
+              </div>
+              <a class="btn btn--ghost" routerLink="/assessments">View</a>
+            </article>
           </li>
         }
       </ul>
@@ -58,12 +115,14 @@
   <div class="role-dashboard__tables">
     <app-dashboard-course-table
       title="My courses"
+      subtitle="Courses currently assigned to you"
       [courses]="data().myCourses"
       [showCreatedAt]="true"
       emptyMessage="You have not been assigned any courses yet."
     />
     <app-dashboard-course-table
       title="Recent courses"
+      subtitle="Latest activity in the catalog"
       [courses]="data().recentCourses"
       [showCreatedAt]="true"
       emptyMessage="No recent course activity."

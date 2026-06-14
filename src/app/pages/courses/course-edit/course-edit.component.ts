@@ -25,12 +25,23 @@ import { CourseFormComponent } from '../course-form/course-form.component';
   imports: [CourseFormComponent, LoadingSpinnerComponent, PageAlertComponent, RouterLink],
   template: `
     @if (loadingCourse()) {
-      <app-loading-spinner label="Loading course..." />
+      <div class="courses-surface">
+        <app-loading-spinner label="Loading course..." />
+      </div>
     } @else if (!courseFound()) {
-      <app-page-alert [message]="apiError() ?? 'Course not found.'" />
-      <a class="btn btn--ghost" routerLink="/courses" style="margin-top: 1rem; display: inline-flex">
-        Back to courses
-      </a>
+      <div class="courses-surface">
+        <header class="courses-hero">
+          <div class="courses-hero__content">
+            <div>
+              <p class="courses-hero__eyebrow">Course catalog</p>
+              <h1>Course not found</h1>
+              <p class="courses-hero__subtitle">This course may have been removed or the link is invalid.</p>
+            </div>
+          </div>
+        </header>
+        <app-page-alert [message]="apiError() ?? 'Course not found.'" />
+        <a class="btn btn--ghost" routerLink="/courses" style="display: inline-flex">Back to courses</a>
+      </div>
     } @else {
       <app-course-form
         [form]="form"
@@ -44,18 +55,6 @@ import { CourseFormComponent } from '../course-form/course-form.component';
         submitLabel="Save changes"
         (submitted)="submit()"
       />
-    }
-  `,
-  styles: `
-    :host {
-      display: block;
-    }
-    .btn {
-      padding: 0.65rem 1rem;
-      border-radius: var(--radius-md);
-      color: var(--text-muted);
-      text-decoration: none;
-      border: 1px solid var(--border);
     }
   `,
 })

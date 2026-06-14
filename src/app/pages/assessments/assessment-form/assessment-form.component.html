@@ -1,16 +1,18 @@
-<div class="assessment-form-page">
-  <header class="page-header">
-    <div>
-      <a class="btn btn--ghost" routerLink="/assessments">← Back to assessments</a>
-      <p class="assessment-form-page__eyebrow">Assessment</p>
-      <h1>{{ heading() }}</h1>
-      @if (subtitle()) {
-        <p class="page-header__subtitle">{{ subtitle() }}</p>
-      }
+<div class="lms-section assessment-form-page">
+  <header class="lms-hero">
+    <div class="lms-hero__content">
+      <div>
+        <a class="btn btn--ghost" routerLink="/assessments">← Back to assessments</a>
+        <p class="lms-hero__eyebrow">Assessment setup</p>
+        <h1>{{ heading() }}</h1>
+        @if (subtitle()) {
+          <p class="lms-hero__subtitle">{{ subtitle() }}</p>
+        }
+      </div>
     </div>
   </header>
 
-  <section class="form-panel glass-panel">
+  <section class="lms-form-panel">
     <app-page-alert [message]="apiError()" />
 
     <form class="assessment-form" [formGroup]="form()" (ngSubmit)="onSubmit()">

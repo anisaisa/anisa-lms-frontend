@@ -9,6 +9,7 @@ import { UserRole } from './models/user-role';
 const moduleManageRoles = [UserRole.Admin, UserRole.Instructor];
 const assessmentManageRoles = [UserRole.Admin, UserRole.Instructor];
 const assessmentScoreManageRoles = [UserRole.Admin, UserRole.Instructor];
+const progressManageRoles = [UserRole.Admin, UserRole.Instructor];
 const enrollmentManageRoles = [UserRole.Admin, UserRole.Instructor];
 const userManageRoles = [UserRole.Admin, UserRole.Instructor];
 
@@ -151,6 +152,31 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/assessment-scores/assessment-score-edit/assessment-score-edit.component').then(
             (m) => m.AssessmentScoreEditComponent,
+          ),
+      },
+      {
+        path: 'progress',
+        loadComponent: () =>
+          import('./pages/progress/progress-list/progress-list.component').then(
+            (m) => m.ProgressListComponent,
+          ),
+      },
+      {
+        path: 'progress/new',
+        canActivate: [roleGuard],
+        data: { roles: progressManageRoles },
+        loadComponent: () =>
+          import('./pages/progress/progress-create/progress-create.component').then(
+            (m) => m.ProgressCreateComponent,
+          ),
+      },
+      {
+        path: 'progress/:progressId/edit',
+        canActivate: [roleGuard],
+        data: { roles: progressManageRoles },
+        loadComponent: () =>
+          import('./pages/progress/progress-edit/progress-edit.component').then(
+            (m) => m.ProgressEditComponent,
           ),
       },
       {

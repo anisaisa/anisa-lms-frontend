@@ -47,6 +47,10 @@ export class CourseListComponent implements OnInit {
     this.auth.currentUser$.pipe(map(() => this.auth.hasRole(UserRole.Admin))),
     { initialValue: this.auth.hasRole(UserRole.Admin) },
   );
+  protected readonly isInstructor = toSignal(
+    this.auth.currentUser$.pipe(map(() => this.auth.hasRole(UserRole.Instructor))),
+    { initialValue: this.auth.hasRole(UserRole.Instructor) },
+  );
 
   protected readonly loading = signal(false);
   protected readonly deleting = signal(false);
@@ -149,6 +153,53 @@ export class CourseListComponent implements OnInit {
 
   protected enrollmentCount(course: CourseDto): number {
     return course.enrollments?.length ?? 0;
+  }
+
+  protected moduleCount(course: CourseDto): number {
+    return course.modules?.length ?? 0;
+  }
+
+  protected assessmentCount(course: CourseDto): number {
+    return course.assessments?.length ?? 0;
+  }
+
+  protected enrollmentFillPercent(course: CourseDto): number {
+    if (!course.maxEnrollments) {
+      return 0;
+    }
+    return Math.min(100, Math.round((this.enrollmentCount(course) / course.maxEnrollments) * 100));
+  }
+
+  protected totalModulesOnPage(): number {
+    return this.courses().reduce((sum, course) => sum + this.moduleCount(course), 0);
+  }
+
+  protected isPublished(course: CourseDto): boolean {
+    return course.status?.toLowerCase() === 'published';
+  }
+
+  protected isDraft(course: CourseDto): boolean {
+    return course.status?.toLowerCase() === 'draft';
+  }
+
+  protected coursesEyebrow(): string {
+    if (this.isAdmin()) {
+      return 'Admin catalog';
+    }
+    if (this.isInstructor()) {
+      return 'Teaching workspace';
+    }
+    return 'Learning catalog';
+  }
+
+  protected coursesSubtitle(): string {
+    if (this.isAdmin()) {
+      return 'Manage the full course catalog, instructors, capacity, and module structure.';
+    }
+    if (this.isInstructor()) {
+      return 'Review courses you teach, open modules, and track learner engagement.';
+    }
+    return 'Browse enrolled and available courses, then continue your learning path.';
   }
 
   protected deleteMessage(): string {

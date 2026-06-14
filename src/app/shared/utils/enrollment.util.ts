@@ -54,7 +54,9 @@ export function filterEnrollments(
 
   return enrollments.filter((enrollment) => {
     const matchesSearch =
-      !query || enrollment.studentFullName.toLowerCase().includes(query);
+      !query ||
+      enrollment.studentFullName.toLowerCase().includes(query) ||
+      enrollment.courseTitle.toLowerCase().includes(query);
     const matchesStatus =
       statusFilter === 'all' || enrollment.status === statusFilter;
     return matchesSearch && matchesStatus;

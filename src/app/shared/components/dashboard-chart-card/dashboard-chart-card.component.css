@@ -1,40 +1,94 @@
 .chart-card {
-  padding: 1.15rem 1.25rem;
+  padding: 1.2rem 1.3rem 1.35rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  min-height: 16rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(165deg, #ffffff 0%, var(--purple-50) 100%);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), border-color var(--transition);
+  gap: 1rem;
+  min-height: 17rem;
+  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
 }
 
 .chart-card:hover {
   border-color: var(--border-strong);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.chart-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .chart-card__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.02em;
 }
 
+.chart-card__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.chart-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  background: var(--purple-50);
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.chart-card__badge svg {
+  width: 1rem;
+  height: 1rem;
+}
+
 .chart-card__canvas {
   position: relative;
+  flex: 1;
+  min-height: 12.5rem;
+}
+
+.chart-card__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
   flex: 1;
   min-height: 12rem;
 }
 
 .chart-card__empty {
-  margin: auto 0;
-  padding: 2rem 0;
+  margin: 0;
   text-align: center;
   color: var(--text-muted);
   font-size: 0.88rem;
+  line-height: 1.5;
+  max-width: 16rem;
+}
+
+.chart-card__spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--purple-100);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: chart-spin 0.8s linear infinite;
+}
+
+@keyframes chart-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

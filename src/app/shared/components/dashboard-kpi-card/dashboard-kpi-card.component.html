@@ -1,17 +1,154 @@
 @if (link(); as href) {
-  <a class="kpi-card kpi-card--link glass-panel" [routerLink]="href">
-    <span class="kpi-card__label">{{ label() }}</span>
+  <a
+    class="kpi-card kpi-card--link glass-panel"
+    [class.kpi-card--purple]="accent() === 'purple'"
+    [class.kpi-card--violet]="accent() === 'violet'"
+    [class.kpi-card--indigo]="accent() === 'indigo'"
+    [class.kpi-card--sky]="accent() === 'sky'"
+    [class.kpi-card--amber]="accent() === 'amber'"
+    [class.kpi-card--emerald]="accent() === 'emerald'"
+    [class.kpi-card--rose]="accent() === 'rose'"
+    [routerLink]="href"
+  >
+    <div class="kpi-card__top">
+      @if (icon(); as iconName) {
+        <span class="kpi-card__icon" aria-hidden="true">
+          @switch (iconName) {
+            @case ('users') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            }
+            @case ('courses') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+            }
+            @case ('students') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            }
+            @case ('assessments') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+              </svg>
+            }
+            @case ('modules') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            }
+            @case ('enrollments') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M16 3h5v5" />
+                <path d="M8 3H3v5" />
+                <path d="M21 3l-7 7M3 3l7 7" />
+                <path d="M16 21h5v-5" />
+                <path d="M8 21H3v-5" />
+                <path d="M21 21l-7-7M3 21l7-7" />
+              </svg>
+            }
+            @case ('progress') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            }
+          }
+        </span>
+      }
+      <span class="kpi-card__label">{{ label() }}</span>
+    </div>
     <strong class="kpi-card__value">{{ value() }}</strong>
     @if (hint(); as hintText) {
       <span class="kpi-card__hint">{{ hintText }}</span>
     }
+    <span class="kpi-card__glow" aria-hidden="true"></span>
   </a>
 } @else {
-  <article class="kpi-card glass-panel">
-    <span class="kpi-card__label">{{ label() }}</span>
+  <article
+    class="kpi-card glass-panel"
+    [class.kpi-card--purple]="accent() === 'purple'"
+    [class.kpi-card--violet]="accent() === 'violet'"
+    [class.kpi-card--indigo]="accent() === 'indigo'"
+    [class.kpi-card--sky]="accent() === 'sky'"
+    [class.kpi-card--amber]="accent() === 'amber'"
+    [class.kpi-card--emerald]="accent() === 'emerald'"
+    [class.kpi-card--rose]="accent() === 'rose'"
+  >
+    <div class="kpi-card__top">
+      @if (icon(); as iconName) {
+        <span class="kpi-card__icon" aria-hidden="true">
+          @switch (iconName) {
+            @case ('users') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            }
+            @case ('courses') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+            }
+            @case ('students') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            }
+            @case ('assessments') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+              </svg>
+            }
+            @case ('modules') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            }
+            @case ('enrollments') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M16 3h5v5" />
+                <path d="M8 3H3v5" />
+                <path d="M21 3l-7 7M3 3l7 7" />
+                <path d="M16 21h5v-5" />
+                <path d="M8 21H3v-5" />
+                <path d="M21 21l-7-7M3 21l7-7" />
+              </svg>
+            }
+            @case ('progress') {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            }
+          }
+        </span>
+      }
+      <span class="kpi-card__label">{{ label() }}</span>
+    </div>
     <strong class="kpi-card__value">{{ value() }}</strong>
     @if (hint(); as hintText) {
       <span class="kpi-card__hint">{{ hintText }}</span>
     }
+    <span class="kpi-card__glow" aria-hidden="true"></span>
   </article>
 }

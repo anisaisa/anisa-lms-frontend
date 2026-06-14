@@ -45,6 +45,17 @@ export class DashboardComponent implements OnInit {
     return this.normalizeRole(role);
   }
 
+  protected taglineForRole(role: string): string {
+    switch (this.normalizeRole(role)) {
+      case UserRole.Admin:
+        return 'Monitor platform health, users, courses, and enrollment trends at a glance.';
+      case UserRole.Instructor:
+        return 'Track your classes, upcoming assessments, and student engagement.';
+      default:
+        return 'Pick up where you left off and keep building momentum across your courses.';
+    }
+  }
+
   ngOnInit(): void {
     this.loadDashboard();
   }

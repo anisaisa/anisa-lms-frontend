@@ -38,6 +38,7 @@ export class AdminDashboardComponent implements OnInit {
 
   protected readonly recentUsers = signal<User[]>([]);
   protected readonly allUsers = signal<User[]>([]);
+  protected readonly totalEnrollments = signal(0);
   protected readonly loadingChartData = signal(true);
 
   protected readonly coursesChartData = signal<ChartData<'bar'>>({ labels: [], datasets: [] });
@@ -67,6 +68,17 @@ export class AdminDashboardComponent implements OnInit {
     void this.router.navigate(['/users', user.id], { state: { user } });
   }
 
+  protected initials(fullName: string): string {
+    const parts = fullName.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) {
+      return '?';
+    }
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  }
+
   private initCourseChart(): void {
     const chart = buildCoursesByEnrollmentChart(this.data().popularCourses);
     this.coursesChartData.set(chart.data);
@@ -83,6 +95,7 @@ export class AdminDashboardComponent implements OnInit {
       .subscribe({
         next: ({ users, enrollments }) => {
           this.allUsers.set(users);
+          this.totalEnrollments.set(enrollments.length);
           const usersChart = buildUsersByRoleChart(users);
           this.usersChartData.set(usersChart.data);
           this.usersChartOptions.set(usersChart.options);

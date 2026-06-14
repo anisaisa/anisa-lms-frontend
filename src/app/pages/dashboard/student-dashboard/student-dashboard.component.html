@@ -1,56 +1,148 @@
 <div class="role-dashboard">
+  <nav class="dashboard-quick-actions" aria-label="Quick actions">
+    <a class="dashboard-quick-actions__link" routerLink="/courses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+      Browse courses
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/progress">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+      My progress
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/assessments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6" />
+      </svg>
+      Assessments
+    </a>
+  </nav>
+
   <div class="role-dashboard__kpis">
     <app-dashboard-kpi-card
       label="Completed assessments"
       [value]="data().completedAssessments"
+      hint="Finished so far"
+      icon="assessments"
+      accent="emerald"
     />
-    <app-dashboard-kpi-card label="Total enrollments" [value]="data().totalEnrollments" />
-    <app-dashboard-kpi-card label="Modules completed" [value]="data().modulesCompleted" />
+    <app-dashboard-kpi-card
+      label="Total enrollments"
+      [value]="data().totalEnrollments"
+      hint="Courses you joined"
+      icon="enrollments"
+      accent="indigo"
+    />
+    <app-dashboard-kpi-card
+      label="Modules completed"
+      [value]="data().modulesCompleted"
+      hint="Learning milestones"
+      icon="modules"
+      accent="violet"
+    />
     <app-dashboard-kpi-card
       label="Courses in progress"
       [value]="data().coursesInProgress.length"
+      hint="Active learning paths"
+      icon="courses"
+      accent="sky"
     />
   </div>
 
-  <div class="role-dashboard__charts">
-    <app-dashboard-chart-card
-      title="Completed modules %"
-      type="doughnut"
-      [data]="progressChartData()"
-      [options]="progressChartOptions()"
-      [loading]="progressLoading()"
-      [hasData]="hasProgressChart()"
-      emptyMessage="Enroll in a course to track module progress."
-    />
-    <app-dashboard-chart-card
-      title="Learning activity"
-      type="bar"
-      [data]="assessmentsChartData()"
-      [options]="assessmentsChartOptions()"
-      [hasData]="data().totalEnrollments > 0 || data().completedAssessments > 0"
-      emptyMessage="No learning activity yet."
-    />
+  <div class="role-dashboard__split">
+    <div class="role-dashboard__charts">
+      <app-dashboard-chart-card
+        title="Completed modules %"
+        subtitle="Overall completion across active courses"
+        type="doughnut"
+        [data]="progressChartData()"
+        [options]="progressChartOptions()"
+        [loading]="progressLoading()"
+        [hasData]="hasProgressChart()"
+        emptyMessage="Enroll in a course to track module progress."
+      />
+      <app-dashboard-chart-card
+        title="Learning activity"
+        subtitle="Enrollments vs completed assessments"
+        type="bar"
+        [data]="assessmentsChartData()"
+        [options]="assessmentsChartOptions()"
+        [hasData]="data().totalEnrollments > 0 || data().completedAssessments > 0"
+        emptyMessage="No learning activity yet."
+      />
+    </div>
+
+    <section class="dashboard-panel">
+      <div class="dashboard-panel__header">
+        <div>
+          <h2 class="dashboard-panel__title">Learning momentum</h2>
+          <p class="dashboard-panel__subtitle">Your current module completion rate</p>
+        </div>
+      </div>
+      @if (progressLoading()) {
+        <p class="dashboard-panel__empty">Calculating your progress...</p>
+      } @else if (!hasProgressChart()) {
+        <p class="dashboard-panel__empty">
+          Enroll in a course and complete modules to unlock personalized insights.
+          <a routerLink="/courses">Browse courses</a>
+        </p>
+      } @else {
+        <div class="dashboard-highlight">
+          <span class="dashboard-highlight__value">{{ aggregateStats().progressPercent }}%</span>
+          <p class="dashboard-highlight__label">
+            You have completed
+            <strong>{{ aggregateStats().completedModules }}</strong>
+            of
+            <strong>{{ aggregateStats().totalModules }}</strong>
+            modules across your active courses.
+          </p>
+        </div>
+      }
+    </section>
   </div>
 
   <section class="dashboard-panel">
-    <h2>Progress summary</h2>
+    <div class="dashboard-panel__header">
+      <div>
+        <h2 class="dashboard-panel__title">Progress summary</h2>
+        <p class="dashboard-panel__subtitle">Detailed breakdown of your learning path</p>
+      </div>
+    </div>
     <app-course-progress-summary [stats]="aggregateStats()" [loading]="progressLoading()" />
   </section>
 
   <section class="dashboard-panel">
-    <h2>Courses in progress</h2>
+    <div class="dashboard-panel__header">
+      <div>
+        <h2 class="dashboard-panel__title">Courses in progress</h2>
+        <p class="dashboard-panel__subtitle">Jump back into your active enrollments</p>
+      </div>
+    </div>
     @if (data().coursesInProgress.length === 0) {
       <p class="dashboard-panel__empty">
         You have no active course enrollments. Dropped or completed courses are not listed here.
         <a routerLink="/courses">Browse courses</a>
       </p>
     } @else {
-      <ul class="dashboard-course-links">
+      <ul class="dashboard-course-tile-list">
         @for (course of data().coursesInProgress; track course.id) {
           <li>
-            <a class="dashboard-course-links__item glass-panel" [routerLink]="['/courses', course.id]">
-              <span>{{ course.title }}</span>
-              <span class="dashboard-course-links__cta">Continue learning →</span>
+            <a class="dashboard-course-tile" [routerLink]="['/courses', course.id]">
+              <span class="dashboard-course-tile__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+              </span>
+              <div>
+                <p class="dashboard-course-tile__title">{{ course.title }}</p>
+                <p class="dashboard-course-tile__meta">Continue where you left off</p>
+              </div>
+              <span class="dashboard-course-tile__cta">Continue →</span>
             </a>
           </li>
         }

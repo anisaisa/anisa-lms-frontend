@@ -1,5 +1,8 @@
 <section class="dashboard-table-section">
   <h2>{{ title() }}</h2>
+  @if (subtitle()) {
+    <p class="dashboard-table-section__lead">{{ subtitle() }}</p>
+  }
   @if (courses().length === 0) {
     <p class="dashboard-table-section__empty">{{ emptyMessage() }}</p>
   } @else {
@@ -18,7 +21,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (course of courses(); track course.id) {
+          @for (course of courses(); track course.id; let i = $index) {
             <tr>
               <td>
                 <strong>{{ course.title }}</strong>
@@ -27,13 +30,15 @@
                 }
               </td>
               @if (showEnrollments()) {
-                <td>{{ course.enrollmentCount }}</td>
+                <td>
+                  <span class="dashboard-table__metric">{{ course.enrollmentCount }}</span>
+                </td>
               }
               @if (showCreatedAt()) {
                 <td>{{ formatDate(course.createdAt) }}</td>
               }
               <td>
-                <a class="dashboard-table__link" [routerLink]="['/courses', course.id]">View</a>
+                <a class="dashboard-table__link" [routerLink]="['/courses', course.id]">Open</a>
               </td>
             </tr>
           }

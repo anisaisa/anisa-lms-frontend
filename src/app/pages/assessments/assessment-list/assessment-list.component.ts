@@ -68,6 +68,16 @@ export class AssessmentListComponent implements OnInit {
     { initialValue: this.auth.hasRole(UserRole.Student) },
   );
 
+  protected readonly isAdmin = toSignal(
+    this.auth.currentUser$.pipe(map(() => this.auth.hasRole(UserRole.Admin))),
+    { initialValue: this.auth.hasRole(UserRole.Admin) },
+  );
+
+  protected readonly isInstructor = toSignal(
+    this.auth.currentUser$.pipe(map(() => this.auth.hasRole(UserRole.Instructor))),
+    { initialValue: this.auth.hasRole(UserRole.Instructor) },
+  );
+
   protected readonly upcomingAssessments = computed(() =>
     getUpcomingAssessments(this.allAssessments()),
   );
@@ -132,6 +142,26 @@ export class AssessmentListComponent implements OnInit {
 
   protected isOverdue(assessment: AssessmentDto): boolean {
     return isAssessmentOverdue(assessment);
+  }
+
+  protected pageEyebrow(): string {
+    if (this.isAdmin()) {
+      return 'Admin assessments';
+    }
+    if (this.isInstructor()) {
+      return 'Teaching assessments';
+    }
+    return 'Student assessments';
+  }
+
+  protected pageSubtitle(): string {
+    if (this.isStudent()) {
+      return 'Assessments for courses where your enrollment is active.';
+    }
+    if (this.isInstructor()) {
+      return 'Review deadlines, requirements, and student results across your courses.';
+    }
+    return 'Manage assessments, deadlines, and results across the full course catalog.';
   }
 
   protected editAssessment(assessment: AssessmentDto, event: Event): void {

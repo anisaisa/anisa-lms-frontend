@@ -1,0 +1,134 @@
+<div class="lms-section progress-page">
+  <header class="lms-hero">
+    <div class="lms-hero__content">
+      <div>
+        <p class="lms-hero__eyebrow">{{ pageEyebrow() }}</p>
+        <h1>Module progress</h1>
+        <p class="lms-hero__subtitle">{{ pageSubtitle() }}</p>
+      </div>
+      <div class="lms-hero__meta">
+        @if (canManageProgress()) {
+          <a class="btn btn--primary" routerLink="/progress/new">Record progress</a>
+        }
+      </div>
+    </div>
+  </header>
+
+  <app-page-alert [message]="apiError()" />
+
+  @if (!loading() && allItems().length > 0) {
+    <div class="lms-stats">
+      <article class="lms-stat">
+        <span class="lms-stat__label">Records</span>
+        <strong class="lms-stat__value">{{ allItems().length }}</strong>
+      </article>
+      <article class="lms-stat">
+        <span class="lms-stat__label">Completed</span>
+        <strong class="lms-stat__value">{{ completedCount() }}</strong>
+      </article>
+      <article class="lms-stat">
+        <span class="lms-stat__label">Incomplete</span>
+        <strong class="lms-stat__value">{{ incompleteCount() }}</strong>
+      </article>
+    </div>
+  }
+
+  <div class="lms-toolbar">
+    <div class="search-field">
+      <label class="search-field__label" for="progress-search">Search</label>
+      <input
+        id="progress-search"
+        type="search"
+        [formControl]="searchControl"
+        placeholder="Student, course, or module..."
+      />
+    </div>
+    <div class="filter-field field">
+      <label for="progress-completion-filter">Completion</label>
+      <select id="progress-completion-filter" [formControl]="completionFilterControl">
+        <option value="all">All records</option>
+        <option value="completed">Completed only</option>
+        <option value="incomplete">Incomplete only</option>
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner label="Loading module progress..." />
+  } @else if (allItems().length === 0 && !searchQuery().trim() && completionFilter() === 'all') {
+    <div class="lms-panel">
+      <h2>No progress records yet</h2>
+      @if (canManageProgress()) {
+        <p class="lms-panel__subtitle">Record module completion for a student to get started.</p>
+        <a class="btn btn--primary" routerLink="/progress/new">Record progress</a>
+      } @else {
+        <p class="lms-panel__subtitle">Complete modules from a course page to see your progress here.</p>
+        <a class="btn btn--primary" routerLink="/courses">Browse courses</a>
+      }
+    </div>
+  } @else if (filteredItems().length === 0) {
+    <div class="lms-panel">
+      <h2>No matching records</h2>
+      <p class="lms-panel__subtitle">Try a different search or filter.</p>
+    </div>
+  } @else {
+    <div class="lms-table-wrap">
+      <table class="lms-table progress-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Module</th>
+            <th>Status</th>
+            <th>Completed on</th>
+            @if (canManageProgress()) {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredItems(); track item.id) {
+            <tr>
+              <td>{{ item.studentFullName || 'Unknown student' }}</td>
+              <td>{{ item.courseTitle }}</td>
+              <td>{{ item.moduleTitle }}</td>
+              <td>
+                @if (item.isCompleted) {
+                  <span class="progress-status-badge progress-status-badge--complete">Completed</span>
+                } @else {
+                  <span class="progress-status-badge progress-status-badge--pending">Incomplete</span>
+                }
+              </td>
+              <td>{{ formatCompletion(item.completionDate) }}</td>
+              @if (canManageProgress()) {
+                <td>
+                  <div class="lms-table__actions">
+                    <button type="button" class="btn btn--secondary" (click)="editItem(item)">
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn--danger"
+                      (click)="openDeleteDialog(item, $event)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="deleteDialogOpen()"
+  title="Delete module progress"
+  [message]="deleteMessage()"
+  confirmLabel="Delete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="closeDeleteDialog()"
+/>

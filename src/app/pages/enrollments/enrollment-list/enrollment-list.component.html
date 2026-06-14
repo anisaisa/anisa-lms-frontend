@@ -14,7 +14,7 @@
 
   <div class="enrollment-toolbar">
     <div class="search-field">
-      <label class="search-field__label" for="enrollment-search">Search by student name</label>
+      <label class="search-field__label" for="enrollment-search">Search by student or course</label>
       <input
         id="enrollment-search"
         type="search"
@@ -52,6 +52,7 @@
         <thead>
           <tr>
             <th>Student</th>
+            <th>Course</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -60,6 +61,7 @@
           @for (enrollment of filteredEnrollments(); track enrollment.id) {
             <tr>
               <td>{{ enrollment.studentFullName || 'Unknown student' }}</td>
+              <td>{{ enrollment.courseTitle || 'Unknown course' }}</td>
               <td>
                 <app-enrollment-status-badge [status]="enrollment.status" />
               </td>

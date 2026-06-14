@@ -1,9 +1,27 @@
-<section class="chart-card">
-  <h3 class="chart-card__title">{{ title() }}</h3>
+<section class="chart-card glass-panel">
+  <header class="chart-card__header">
+    <div>
+      <h3 class="chart-card__title">{{ title() }}</h3>
+      @if (subtitle(); as text) {
+        <p class="chart-card__subtitle">{{ text }}</p>
+      }
+    </div>
+    <span class="chart-card__badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M3 3v18h18" />
+        <path d="M7 16l4-6 4 3 5-7" />
+      </svg>
+    </span>
+  </header>
   @if (loading()) {
-    <p class="chart-card__empty">Loading chart...</p>
+    <div class="chart-card__state">
+      <span class="chart-card__spinner" aria-hidden="true"></span>
+      <p class="chart-card__empty">Loading chart...</p>
+    </div>
   } @else if (!hasData()) {
-    <p class="chart-card__empty">{{ emptyMessage() }}</p>
+    <div class="chart-card__state">
+      <p class="chart-card__empty">{{ emptyMessage() }}</p>
+    </div>
   } @else {
     <div class="chart-card__canvas">
       <canvas

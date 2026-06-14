@@ -1,21 +1,17 @@
-<div class="assessments-page">
-  <header class="page-header">
-    <div>
-      <p class="assessments-page__eyebrow">Learning</p>
-      <h1>Assessments</h1>
-      <p class="page-header__subtitle">
-        @if (isStudent()) {
-          Assessments for courses where your enrollment is active.
-        } @else {
-          View deadlines, requirements, and student results by course.
-        }
-      </p>
-    </div>
-    @if (canManage()) {
-      <div class="page-actions">
-        <a class="btn btn--primary" routerLink="/assessments/new">+ Create assessment</a>
+<div class="lms-section assessments-page">
+  <header class="lms-hero">
+    <div class="lms-hero__content">
+      <div>
+        <p class="lms-hero__eyebrow">{{ pageEyebrow() }}</p>
+        <h1>Assessments</h1>
+        <p class="lms-hero__subtitle">{{ pageSubtitle() }}</p>
       </div>
-    }
+      <div class="lms-hero__meta">
+        @if (canManage()) {
+          <a class="btn btn--primary" routerLink="/assessments/new">Create assessment</a>
+        }
+      </div>
+    </div>
   </header>
 
   <app-page-alert [message]="apiError()" />
@@ -41,12 +37,38 @@
       </app-empty-state>
     }
   } @else {
+    <div class="lms-stats">
+      <article class="lms-stat">
+        <span class="lms-stat__label">Total</span>
+        <strong class="lms-stat__value">{{ allAssessments().length }}</strong>
+      </article>
+      <article class="lms-stat">
+        <span class="lms-stat__label">Upcoming</span>
+        <strong class="lms-stat__value">{{ upcomingAssessments().length }}</strong>
+      </article>
+      <article class="lms-stat">
+        <span class="lms-stat__label">Courses</span>
+        <strong class="lms-stat__value">{{ courseGroups().length }}</strong>
+      </article>
+    </div>
+
     @if (upcomingAssessments().length > 0) {
-      <section class="assessments-section">
-        <h2>Upcoming assessments</h2>
+      <section class="lms-panel">
+        <div class="lms-panel__header">
+          <div>
+            <h2>Upcoming assessments</h2>
+            <p class="lms-panel__subtitle">Deadlines that are still active</p>
+          </div>
+        </div>
         <div class="assessment-card-grid">
           @for (assessment of upcomingAssessments(); track assessment.id) {
-            <article class="assessment-card assessment-card--upcoming glass-panel">
+            <article class="assessment-card assessment-card--upcoming">
+              <span class="assessment-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6" />
+                </svg>
+              </span>
               <span class="assessment-card__badge assessment-card__badge--upcoming">Upcoming</span>
               <h3 class="assessment-card__title">{{ assessment.title }}</h3>
               <p class="assessment-card__meta">{{ assessment.courseTitle }}</p>
@@ -70,18 +92,37 @@
       </section>
     }
 
-    <section class="assessments-section">
-      <h2>All assessments by course</h2>
+    <section class="lms-panel">
+      <div class="lms-panel__header">
+        <div>
+          <h2>All assessments by course</h2>
+          <p class="lms-panel__subtitle">Grouped by course for quick review</p>
+        </div>
+      </div>
       @for (group of courseGroups(); track trackGroup($index, group)) {
         <div class="course-assessment-group">
-          <h3>{{ group.courseTitle }}</h3>
+          <h3 class="lms-group-title">
+            <span class="lms-group-title__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+            </span>
+            {{ group.courseTitle }}
+          </h3>
           <div class="assessment-card-grid">
             @for (assessment of group.assessments; track assessment.id) {
               <article
-                class="assessment-card glass-panel"
+                class="assessment-card"
                 [class.assessment-card--overdue]="isOverdue(assessment)"
                 [class.assessment-card--upcoming]="!isOverdue(assessment)"
               >
+                <span class="assessment-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M16 13H8M16 17H8" />
+                  </svg>
+                </span>
                 @if (isOverdue(assessment)) {
                   <span class="assessment-card__badge assessment-card__badge--overdue">Overdue</span>
                 } @else {

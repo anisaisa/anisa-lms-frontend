@@ -39,8 +39,11 @@ export class EnrollmentService {
     const record = raw as Record<string, unknown>;
     return {
       id: Number(record['id'] ?? record['Id']),
+      studentId: String(record['studentId'] ?? record['StudentId'] ?? ''),
       status: normalizeEnrollmentStatus(record['status'] ?? record['Status']),
       studentFullName: String(record['studentFullName'] ?? record['StudentFullName'] ?? ''),
+      courseId: Number(record['courseId'] ?? record['CourseId'] ?? 0),
+      courseTitle: String(record['courseTitle'] ?? record['CourseTitle'] ?? ''),
     };
   }
 }

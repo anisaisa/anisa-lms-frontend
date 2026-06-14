@@ -10,7 +10,6 @@ import { ApiFieldErrors, getFieldError } from '../../../shared/utils/api-error.u
   selector: 'app-assessment-form',
   imports: [ReactiveFormsModule, RouterLink, PageAlertComponent],
   templateUrl: './assessment-form.component.html',
-  styleUrls: ['../assessments-page.css'],
 })
 export class AssessmentFormComponent {
   readonly form = input.required<FormGroup>();

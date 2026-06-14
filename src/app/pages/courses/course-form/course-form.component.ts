@@ -11,7 +11,6 @@ import { ApiFieldErrors, getFieldError } from '../../../shared/utils/api-error.u
   selector: 'app-course-form',
   imports: [ReactiveFormsModule, RouterLink, PageAlertComponent],
   templateUrl: './course-form.component.html',
-  styleUrls: ['../courses-page.css'],
 })
 export class CourseFormComponent {
   readonly form = input.required<FormGroup>();

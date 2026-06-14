@@ -10,6 +10,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 })
 export class DashboardChartCardComponent {
   readonly title = input.required<string>();
+  readonly subtitle = input<string | null>(null);
   readonly type = input.required<ChartType>();
   readonly data = input.required<ChartData>();
   readonly options = input<ChartOptions | undefined>();

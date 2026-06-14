@@ -26,6 +26,15 @@
           </p>
         </div>
         <div>
+          <p class="enrollment-details-card__label">Course</p>
+          <p class="enrollment-details-card__value">
+            {{ item.courseTitle || 'Unknown course' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="enrollment-details-card__row">
+        <div>
           <p class="enrollment-details-card__label">Current status</p>
           <app-enrollment-status-badge [status]="item.status" />
         </div>

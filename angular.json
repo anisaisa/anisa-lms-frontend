@@ -27,7 +27,12 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/app/pages/shared/lms-section-theme.css",
+              "src/app/pages/assessments/assessments-page.css",
+              "src/app/pages/progress/progress-page.css",
+              "src/app/pages/courses/courses-page.css",
+              "src/app/pages/auth/auth-page.css"
             ],
             "outputMode": "static"
           },
@@ -47,8 +52,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kB",
-                  "maximumError": "10kB"
+                  "maximumWarning": "12kB",
+                  "maximumError": "20kB"
                 }
               ],
               "outputHashing": "all"

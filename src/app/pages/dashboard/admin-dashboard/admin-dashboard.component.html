@@ -1,17 +1,64 @@
 <div class="role-dashboard">
+  <nav class="dashboard-quick-actions" aria-label="Quick actions">
+    <a class="dashboard-quick-actions__link" routerLink="/users">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+      </svg>
+      Users
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/courses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+      Courses
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/enrollments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M16 3h5v5M8 3H3v5M21 3l-7 7M3 3l7 7" />
+      </svg>
+      Enrollments
+    </a>
+    <a class="dashboard-quick-actions__link" routerLink="/progress">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+      Progress
+    </a>
+  </nav>
+
   <div class="role-dashboard__kpis">
     <app-dashboard-kpi-card
       label="Total users"
       [value]="data().totalUsers"
       link="/users"
-      hint="Open user management"
+      hint="Registered accounts"
+      icon="users"
+      accent="purple"
     />
-    <app-dashboard-kpi-card label="Total courses" [value]="data().totalCourses" link="/courses" />
+    <app-dashboard-kpi-card
+      label="Total courses"
+      [value]="data().totalCourses"
+      link="/courses"
+      hint="Published catalog"
+      icon="courses"
+      accent="indigo"
+    />
+    <app-dashboard-kpi-card
+      label="Total enrollments"
+      [value]="totalEnrollments()"
+      link="/enrollments"
+      hint="All enrollment records"
+      icon="enrollments"
+      accent="violet"
+    />
   </div>
 
   <div class="role-dashboard__charts role-dashboard__charts--triple">
     <app-dashboard-chart-card
       title="Courses by enrollment"
+      subtitle="Most popular courses ranked by sign-ups"
       type="bar"
       [data]="coursesChartData()"
       [options]="coursesChartOptions()"
@@ -20,6 +67,7 @@
     />
     <app-dashboard-chart-card
       title="Students by role"
+      subtitle="Distribution across user roles"
       type="pie"
       [data]="usersChartData()"
       [options]="usersChartOptions()"
@@ -29,6 +77,7 @@
     />
     <app-dashboard-chart-card
       title="Enrollment status"
+      subtitle="Active, completed, and dropped learners"
       type="doughnut"
       [data]="enrollmentChartData()"
       [options]="enrollmentChartOptions()"
@@ -38,30 +87,59 @@
     />
   </div>
 
-  <section class="dashboard-users-panel">
-    <h2>Users</h2>
-    @if (recentUsers().length === 0) {
-      <p class="dashboard-users-panel__empty glass-panel">No users in the system yet.</p>
-    } @else {
-      <ul class="dashboard-users-list">
-        @for (user of recentUsers(); track user.id) {
-          <li class="dashboard-users-list__item glass-panel">
-            <button type="button" class="dashboard-users-list__link" (click)="viewUser(user)">
-              {{ user.fullName }}
-            </button>
-            <app-user-role-badge [role]="user.role" />
-          </li>
-        }
-      </ul>
-    }
-    <p class="dashboard-users-panel__footer">
-      <a class="btn btn--ghost" routerLink="/users">View all users →</a>
-    </p>
-  </section>
+  <div class="role-dashboard__split">
+    <section class="dashboard-panel">
+      <div class="dashboard-panel__header">
+        <div>
+          <h2 class="dashboard-panel__title">Recent users</h2>
+          <p class="dashboard-panel__subtitle">Latest accounts in the system</p>
+        </div>
+        <a class="btn btn--ghost" routerLink="/users">View all</a>
+      </div>
+      @if (recentUsers().length === 0) {
+        <p class="dashboard-panel__empty">No users in the system yet.</p>
+      } @else {
+        <ul class="dashboard-user-list">
+          @for (user of recentUsers(); track user.id) {
+            <li>
+              <article class="dashboard-user-card">
+                <span class="dashboard-user-card__avatar">{{ initials(user.fullName) }}</span>
+                <div class="dashboard-user-card__body">
+                  <button type="button" class="dashboard-user-card__name" (click)="viewUser(user)">
+                    {{ user.fullName }}
+                  </button>
+                  <p class="dashboard-user-card__meta">{{ user.email }}</p>
+                </div>
+                <app-user-role-badge [role]="user.role" />
+              </article>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="dashboard-panel">
+      <div class="dashboard-panel__header">
+        <div>
+          <h2 class="dashboard-panel__title">Platform snapshot</h2>
+          <p class="dashboard-panel__subtitle">Key counts from your LMS</p>
+        </div>
+      </div>
+      <div class="dashboard-highlight">
+        <span class="dashboard-highlight__value">{{ data().totalCourses }}</span>
+        <p class="dashboard-highlight__label">
+          courses live on the platform with
+          <strong>{{ totalEnrollments() }}</strong>
+          total enrollments across all learners.
+        </p>
+      </div>
+    </section>
+  </div>
 
   <div class="role-dashboard__tables">
     <app-dashboard-course-table
       title="Popular courses"
+      subtitle="Ranked by enrollment volume"
       [courses]="data().popularCourses"
       [showEnrollments]="true"
       [showCreatedAt]="false"
@@ -69,6 +147,7 @@
     />
     <app-dashboard-course-table
       title="Recent courses"
+      subtitle="Newest additions to the catalog"
       [courses]="data().recentCourses"
       [showCreatedAt]="true"
       emptyMessage="No courses found."

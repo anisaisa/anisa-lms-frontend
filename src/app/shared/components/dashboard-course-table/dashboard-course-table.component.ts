@@ -11,6 +11,7 @@ import { DashboardCourseDto } from '../../../models/dashboard-course.dto';
 })
 export class DashboardCourseTableComponent {
   readonly title = input.required<string>();
+  readonly subtitle = input<string | null>(null);
   readonly courses = input.required<DashboardCourseDto[]>();
   readonly showEnrollments = input(false);
   readonly showCreatedAt = input(true);

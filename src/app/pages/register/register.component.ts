@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink, PageAlertComponent],
   templateUrl: './register.component.html',
-  styleUrls: ['../auth/auth-page.css', './register.component.css'],
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);

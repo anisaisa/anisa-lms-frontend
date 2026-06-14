@@ -129,8 +129,9 @@ export class EnrollmentListComponent implements OnInit {
   }
 
   protected deleteMessage(): string {
-    const name = this.enrollmentToDelete()?.studentFullName ?? 'this enrollment';
-    return `Delete enrollment for "${name}"? This cannot be undone.`;
+    const name = this.enrollmentToDelete()?.studentFullName ?? 'this student';
+    const course = this.enrollmentToDelete()?.courseTitle ?? 'this course';
+    return `Delete enrollment for "${name}" in "${course}"? This cannot be undone.`;
   }
 
   protected statusFilterValue(status: EnrollmentStatus): EnrollmentStatus {

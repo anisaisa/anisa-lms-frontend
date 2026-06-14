@@ -1,73 +1,87 @@
-<section class="form-panel glass-panel">
-  <div class="page-header" style="margin-bottom: 1.25rem">
-    <div>
-      <h1>{{ heading() }}</h1>
-      @if (subtitle()) {
-        <p class="page-header__subtitle">{{ subtitle() }}</p>
-      }
-    </div>
-  </div>
-
-  <app-page-alert [message]="apiError()" />
-
-  <form class="form-grid" [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div class="field">
-      <label for="instructorId">Instructor</label>
-      <select id="instructorId" formControlName="instructorId">
-        <option value="" disabled>Select instructor</option>
-        @for (user of instructors(); track user.id) {
-          <option [value]="user.id">{{ user.fullName }} ({{ user.email }})</option>
+<div class="courses-surface">
+  <header class="courses-hero">
+    <div class="courses-hero__content">
+      <div>
+        <a class="btn btn--ghost courses-form-back" routerLink="/courses">← Back to courses</a>
+        <p class="courses-hero__eyebrow">Course catalog</p>
+        <h1>{{ heading() }}</h1>
+        @if (subtitle()) {
+          <p class="courses-hero__subtitle">{{ subtitle() }}</p>
         }
-      </select>
-      @if (loadingInstructors()) {
-        <p class="field__error" style="color: var(--text-dim)">Loading instructors...</p>
-      }
-      @if (fieldError('instructorId'); as error) {
-        <p class="field__error">{{ error }}</p>
-      }
+      </div>
+      <div class="courses-hero__meta">
+        <span class="courses-role-pill">Admin</span>
+      </div>
     </div>
+  </header>
 
-    <div class="field">
-      <label for="title">Title</label>
-      <input id="title" type="text" formControlName="title" />
-      @if (fieldError('title'); as error) {
-        <p class="field__error">{{ error }}</p>
-      }
-    </div>
+  <section class="courses-form-panel">
+    <app-page-alert [message]="apiError()" />
 
-    <div class="field">
-      <label for="description">Description</label>
-      <textarea id="description" formControlName="description" rows="4"></textarea>
-      @if (fieldError('description'); as error) {
-        <p class="field__error">{{ error }}</p>
-      }
-    </div>
-
-    <div class="field">
-      <label for="status">Status</label>
-      <select id="status" formControlName="status">
-        @for (status of statuses; track status) {
-          <option [value]="status">{{ status }}</option>
+    <form class="courses-form-grid" [formGroup]="form()" (ngSubmit)="onSubmit()">
+      <div class="field field--full">
+        <label for="instructorId">Instructor</label>
+        <select id="instructorId" formControlName="instructorId">
+          <option value="" disabled>Select instructor</option>
+          @for (user of instructors(); track user.id) {
+            <option [value]="user.id">{{ user.fullName }} ({{ user.email }})</option>
+          }
+        </select>
+        @if (loadingInstructors()) {
+          <p class="field__hint">Loading instructors...</p>
         }
-      </select>
-      @if (fieldError('status'); as error) {
-        <p class="field__error">{{ error }}</p>
-      }
-    </div>
+        @if (fieldError('instructorId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
 
-    <div class="field">
-      <label for="maxEnrollments">Max enrollments</label>
-      <input id="maxEnrollments" type="number" min="1" formControlName="maxEnrollments" />
-      @if (fieldError('maxEnrollments'); as error) {
-        <p class="field__error">{{ error }}</p>
-      }
-    </div>
+      <div class="field field--full">
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" placeholder="Course title" />
+        @if (fieldError('title'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
 
-    <div class="form-actions">
-      <button class="btn btn--primary" type="submit" [disabled]="submitting()">
-        {{ submitting() ? 'Saving...' : submitLabel() }}
-      </button>
-      <a class="btn btn--ghost" routerLink="/courses">Cancel</a>
-    </div>
-  </form>
-</section>
+      <div class="field field--full">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="4"
+          placeholder="What will students learn?"
+        ></textarea>
+        @if (fieldError('description'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status" formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+        @if (fieldError('status'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="maxEnrollments">Max enrollments</label>
+        <input id="maxEnrollments" type="number" min="1" formControlName="maxEnrollments" />
+        @if (fieldError('maxEnrollments'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="courses-form-actions field--full">
+        <button class="btn btn--primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : submitLabel() }}
+        </button>
+        <a class="btn btn--ghost" routerLink="/courses">Cancel</a>
+      </div>
+    </form>
+  </section>
+</div>

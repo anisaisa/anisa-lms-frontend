@@ -5,7 +5,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { UserRole } from '../../models/user-role';
 import { AuthService } from '../../services/auth.service';
-import { NavItem } from '../../shared/nav-item.model';
+import { NavIcon, NavItem } from '../../shared/nav-item.model';
 
 @Component({
   selector: 'app-main-layout',
@@ -25,19 +25,17 @@ export class MainLayoutComponent {
 
   protected readonly navItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
-      { label: 'Dashboard', path: '/dashboard' },
-      { label: 'Courses', path: '/courses' },
-      { label: 'Assessments', path: '/assessments' },
+      { label: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
+      { label: 'Courses', path: '/courses', icon: 'courses' },
+      { label: 'Progress', path: '/progress', icon: 'progress' },
+      { label: 'Assessments', path: '/assessments', icon: 'assessments' },
     ];
 
     const user = this.currentUser();
-    if (
-      user &&
-      this.auth.hasRole(UserRole.Admin, UserRole.Instructor)
-    ) {
-      items.push({ label: 'Scores', path: '/assessment-scores' });
-      items.push({ label: 'Enrollments', path: '/enrollments' });
-      items.push({ label: 'Users', path: '/users' });
+    if (user && this.auth.hasRole(UserRole.Admin, UserRole.Instructor)) {
+      items.push({ label: 'Scores', path: '/assessment-scores', icon: 'scores' });
+      items.push({ label: 'Enrollments', path: '/enrollments', icon: 'enrollments' });
+      items.push({ label: 'Users', path: '/users', icon: 'users' });
     }
 
     return items;
@@ -52,7 +50,11 @@ export class MainLayoutComponent {
   }
 
   protected logout(): void {
-    this.auth.signOut();
     this.closeNav();
+    this.auth.signOut();
+  }
+
+  protected trackNavIcon(icon: NavIcon): NavIcon {
+    return icon;
   }
 }

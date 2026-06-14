@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink, PageAlertComponent],
   templateUrl: './login.component.html',
-  styleUrls: ['../auth/auth-page.css', './login.component.css'],
+  styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

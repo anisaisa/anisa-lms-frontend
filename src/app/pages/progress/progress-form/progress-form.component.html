@@ -1,0 +1,91 @@
+<div class="lms-section progress-form-page">
+  <header class="lms-hero">
+    <div class="lms-hero__content">
+      <div>
+        <a class="btn btn--ghost" routerLink="/progress">← Back to progress</a>
+        <p class="lms-hero__eyebrow">Module progress</p>
+        <h1>{{ heading() }}</h1>
+        @if (subtitle()) {
+          <p class="lms-hero__subtitle">{{ subtitle() }}</p>
+        }
+      </div>
+    </div>
+  </header>
+
+  <section class="lms-form-panel">
+    <app-page-alert [message]="apiError()" />
+
+    <form class="progress-form" [formGroup]="form()" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="studentId">Student</label>
+        @if (loadingStudents()) {
+          <p class="field__hint">Loading students...</p>
+        } @else if (students().length === 0) {
+          <p class="field__hint">No students available yet.</p>
+        } @else {
+          <select id="studentId" formControlName="studentId">
+            <option value="" disabled>Select a student</option>
+            @for (student of students(); track student.id) {
+              <option [value]="student.id">{{ student.fullName }} ({{ student.email }})</option>
+            }
+          </select>
+        }
+        @if (fieldError('studentId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="courseId">Course</label>
+        @if (loadingCourses()) {
+          <p class="field__hint">Loading courses...</p>
+        } @else if (courses().length === 0) {
+          <p class="field__hint">No courses available yet.</p>
+        } @else {
+          <select id="courseId" formControlName="courseId">
+            <option [value]="0" disabled>Select a course</option>
+            @for (course of courses(); track course.id) {
+              <option [value]="course.id">{{ course.title }}</option>
+            }
+          </select>
+        }
+        @if (fieldError('courseId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="moduleId">Module</label>
+        @if (loadingModules()) {
+          <p class="field__hint">Loading modules...</p>
+        } @else if (!form().value.courseId) {
+          <p class="field__hint">Select a course first.</p>
+        } @else if (modules().length === 0) {
+          <p class="field__hint">This course has no modules yet.</p>
+        } @else {
+          <select id="moduleId" formControlName="moduleId">
+            <option [value]="0" disabled>Select a module</option>
+            @for (module of modules(); track module.id) {
+              <option [value]="module.id">#{{ module.orderIndex }} — {{ module.title }}</option>
+            }
+          </select>
+        }
+        @if (fieldError('moduleId'); as error) {
+          <p class="field__error">{{ error }}</p>
+        }
+      </div>
+
+      <label class="mark-progress__check">
+        <input type="checkbox" formControlName="isCompleted" />
+        <span>Mark this module as completed</span>
+      </label>
+
+      <div class="progress-form__actions">
+        <button class="btn btn--primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving...' : submitLabel() }}
+        </button>
+        <a class="btn btn--ghost" routerLink="/progress">Cancel</a>
+      </div>
+    </form>
+  </section>
+</div>

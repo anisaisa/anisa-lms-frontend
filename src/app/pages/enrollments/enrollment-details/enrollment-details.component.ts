@@ -133,8 +133,9 @@ export class EnrollmentDetailsComponent implements OnInit {
   }
 
   protected deleteMessage(): string {
-    const name = this.enrollment()?.studentFullName ?? 'this enrollment';
-    return `Remove enrollment for "${name}"? This cannot be undone.`;
+    const name = this.enrollment()?.studentFullName ?? 'this student';
+    const course = this.enrollment()?.courseTitle ?? 'this course';
+    return `Remove enrollment for "${name}" in "${course}"? This cannot be undone.`;
   }
 
   protected fieldError(fieldName: string): string | null {

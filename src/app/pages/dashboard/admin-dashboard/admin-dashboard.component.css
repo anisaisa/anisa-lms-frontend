@@ -1,22 +1,5 @@
 @import '../dashboard-page.css';
 
-.role-dashboard__charts {
-  display: grid;
-  gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .role-dashboard__charts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1100px) {
-  .role-dashboard__charts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 .role-dashboard__tables {
   display: grid;
   gap: 1.5rem;
@@ -27,53 +10,4 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
-}
-
-.dashboard-users-panel {
-  margin-bottom: 2rem;
-}
-
-.dashboard-users-panel h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.1rem;
-}
-
-.dashboard-users-panel__loading,
-.dashboard-users-panel__empty {
-  margin: 0;
-  padding: 0.85rem 1rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.dashboard-users-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.dashboard-users-list__item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding: 0.75rem 1rem;
-}
-
-.dashboard-users-list__link {
-  background: none;
-  border: none;
-  padding: 0;
-  color: var(--primary);
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.dashboard-users-panel__footer {
-  margin-top: 0.75rem;
 }

@@ -1,0 +1,400 @@
+/* Light advanced LMS page theme — assessments, progress, shared chrome */
+
+.lms-section {
+  --section-hero-bg: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    var(--purple-50) 55%,
+    rgb(245 243 255 / 0.98) 100%
+  );
+  --section-panel: #ffffff;
+  --section-panel-muted: rgb(250 248 255 / 0.98);
+  --section-border: rgb(124 58 237 / 0.12);
+  --section-border-strong: rgb(124 58 237 / 0.22);
+  --section-radius: 1.05rem;
+
+  position: relative;
+}
+
+.lms-section::before {
+  content: '';
+  position: absolute;
+  inset: -0.5rem -0.35rem 0;
+  z-index: -1;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(ellipse 70% 45% at 100% 0%, rgb(167 139 250 / 0.1), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgb(196 181 253 / 0.08), transparent 50%);
+  pointer-events: none;
+}
+
+.lms-hero,
+.courses-hero,
+.courses-detail-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.45rem 1.55rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--section-border-strong);
+  border-radius: calc(var(--section-radius) + 0.05rem);
+  background: var(--section-hero-bg);
+  box-shadow: var(--shadow-md);
+}
+
+.lms-hero::after,
+.courses-hero::after,
+.courses-detail-hero::after {
+  content: '';
+  position: absolute;
+  right: -2rem;
+  bottom: -2.5rem;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(124 58 237 / 0.1) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+.lms-hero__content,
+.courses-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 1.25rem;
+}
+
+.lms-hero__eyebrow,
+.courses-hero__eyebrow,
+.courses-detail-hero__eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.lms-hero h1,
+.courses-hero h1,
+.courses-detail-hero h1 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.65rem, 3.2vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--purple-900), var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.courses-detail-hero h1 {
+  background: none;
+  -webkit-text-fill-color: unset;
+  color: var(--text);
+}
+
+.lms-hero__subtitle,
+.courses-hero__subtitle,
+.courses-detail-hero__subtitle {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.lms-hero__meta,
+.courses-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lms-role-pill,
+.courses-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid var(--section-border-strong);
+  background: #fff;
+  color: var(--primary-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-sm);
+}
+
+.lms-role-pill::before,
+.courses-role-pill::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 3px rgb(124 58 237 / 0.15);
+}
+
+.lms-stats,
+.courses-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 1.15rem;
+}
+
+.lms-stat,
+.courses-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--section-border);
+  border-radius: var(--section-radius);
+  background: var(--section-panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.lms-stat__label,
+.courses-stat__label {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lms-stat__value,
+.courses-stat__value {
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.lms-toolbar,
+.courses-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.85rem 1rem;
+  margin-bottom: 1.2rem;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid var(--section-border);
+  border-radius: var(--section-radius);
+  background: var(--section-panel-muted);
+  box-shadow: var(--shadow-sm);
+}
+
+.lms-toolbar .search-field,
+.lms-toolbar .filter-field,
+.courses-toolbar .courses-search {
+  flex: 1 1 12rem;
+}
+
+.lms-toolbar .search-field__label,
+.lms-toolbar .filter-field label,
+.courses-search__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.courses-search input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--text);
+}
+
+.courses-search input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(124 58 237 / 0.12);
+}
+
+.lms-panel,
+.courses-section {
+  margin-bottom: 1.5rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--section-border);
+  border-radius: var(--section-radius);
+  background: var(--section-panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.lms-panel__header,
+.courses-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.95rem;
+}
+
+.lms-panel__header h2,
+.courses-section__header h2 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lms-panel__subtitle,
+.courses-section__subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.lms-hero .btn--ghost,
+.courses-hero .btn--ghost,
+.courses-detail-hero .btn--ghost {
+  margin-bottom: 0.55rem;
+  padding: 0.38rem 0.72rem;
+  font-size: 0.78rem;
+}
+
+.lms-form-panel,
+.courses-form-panel {
+  max-width: 42rem;
+  padding: 1.35rem 1.4rem;
+  border: 1px solid var(--section-border);
+  border-radius: var(--section-radius);
+  background: var(--section-panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.lms-table-wrap,
+.courses-pagination {
+  overflow-x: auto;
+  border: 1px solid var(--section-border);
+  border-radius: var(--section-radius);
+  background: var(--section-panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.courses-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+.courses-pagination__info {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+.lms-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.lms-table th,
+.lms-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--section-border);
+}
+
+.lms-table tbody tr {
+  transition: background-color var(--transition);
+}
+
+.lms-table tbody tr:hover {
+  background: var(--purple-50);
+}
+
+.lms-table th {
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: rgb(250 248 255 / 0.9);
+}
+
+.lms-table__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.lms-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+  padding: 0.35rem;
+  border: 1px solid var(--section-border);
+  border-radius: 999px;
+  background: var(--section-panel-muted);
+  width: fit-content;
+}
+
+.lms-tabs .btn {
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+.lms-tabs .btn--tab-active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--purple-600), var(--purple-500));
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgb(124 58 237 / 0.3);
+}
+
+.lms-hint,
+.courses-success {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--section-border);
+  background: var(--purple-50);
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.lms-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.lms-group-title__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  background: var(--purple-100);
+  color: var(--primary);
+}
+
+.lms-group-title__icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}

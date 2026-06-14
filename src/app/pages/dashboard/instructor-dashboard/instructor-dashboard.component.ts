@@ -49,6 +49,15 @@ export class InstructorDashboardComponent implements OnInit {
     return formatAssessmentDueDate(value);
   }
 
+  protected isDueSoon(value: string): boolean {
+    const due = new Date(value);
+    if (Number.isNaN(due.getTime())) {
+      return false;
+    }
+    const days = (due.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+    return days >= 0 && days <= 7;
+  }
+
   protected hasCoursesChart(): boolean {
     return this.data().myCourses.length > 0;
   }
